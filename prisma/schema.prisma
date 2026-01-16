@@ -1,0 +1,164 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================
+// UTILISATEURS
+// ============================================
+model User {
+  id        String   @id @default(cuid())
+  pseudo    String   @unique
+  password  String
+  level     Int      @default(1)
+  xp        Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  quizAttempts QuizAttempt[]
+  leaderboard  Leaderboard?
+
+  @@map("users")
+}
+
+// ============================================
+// CATÉGORIES
+// ============================================
+model Category {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  slug        String   @unique
+  description String
+  icon        String
+  color       String
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+
+  questions    Question[]
+  quizAttempts QuizAttempt[]
+
+  @@map("categories")
+}
+
+// ============================================
+// QUESTIONS (Multi-langue : EN, FR, AR)
+// ============================================
+model Question {
+  id             String   @id @default(cuid())
+  categoryId     String
+  
+  // Questions en 3 langues
+  questionEn     String
+  questionFr     String
+  questionAr     String
+  
+  // Option 1 en 3 langues
+  option1En      String
+  option1Fr      String
+  option1Ar      String
+  
+  // Option 2 en 3 langues
+  option2En      String
+  option2Fr      String
+  option2Ar      String
+  
+  // Option 3 en 3 langues
+  option3En      String
+  option3Fr      String
+  option3Ar      String
+  
+  // Option 4 en 3 langues
+  option4En      String
+  option4Fr      String
+  option4Ar      String
+  
+  correctAnswer  Int
+  difficulty     Int
+  isBonus        Boolean  @default(false)
+  
+  // Explications en 3 langues (optionnel)
+  explanationEn  String?
+  explanationFr  String?
+  explanationAr  String?
+  
+  verse          String?
+  createdAt      DateTime @default(now())
+
+  category    Category     @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  userAnswers UserAnswer[]
+
+  @@index([categoryId])
+  @@index([difficulty])
+  @@index([isBonus])
+  @@map("questions")
+}
+
+// ============================================
+// TENTATIVES DE QUIZ
+// ============================================
+model QuizAttempt {
+  id              String   @id @default(cuid())
+  userId          String
+  categoryId      String?
+  
+  isExam          Boolean  @default(false)
+  
+  score           Int
+  totalQuestions  Int
+  correctAnswers  Int
+  timeSpent       Int
+  completedAt     DateTime @default(now())
+
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  category    Category?    @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  userAnswers UserAnswer[]
+
+  @@index([userId])
+  @@index([categoryId])
+  @@index([isExam])
+  @@index([completedAt])
+  @@map("quiz_attempts")
+}
+
+// ============================================
+// RÉPONSES UTILISATEURS
+// ============================================
+model UserAnswer {
+  id          String   @id @default(cuid())
+  attemptId   String
+  questionId  String
+  userAnswer  Int
+  isCorrect   Boolean
+  timeSpent   Int
+  answeredAt  DateTime @default(now())
+
+  attempt  QuizAttempt @relation(fields: [attemptId], references: [id], onDelete: Cascade)
+  question Question    @relation(fields: [questionId], references: [id], onDelete: Cascade)
+
+  @@index([attemptId])
+  @@index([questionId])
+  @@map("user_answers")
+}
+
+// ============================================
+// CLASSEMENT (Seulement pour les examens)
+// ============================================
+model Leaderboard {
+  id          String   @id @default(cuid())
+  userId      String   @unique
+  examScore   Int
+  totalExams  Int      @default(1)
+  rank        Int      @default(0)
+  lastExamAt  DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([examScore])
+  @@index([rank])
+  @@map("leaderboard")
+}
