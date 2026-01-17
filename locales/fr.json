@@ -1,9 +1,23 @@
 {
+  "app": {
+    "name": "Quiz Islamic",
+    "tagline": "Testez et approfondissez vos connaissances sur l'Islam"
+  },
   "auth": {
     "login": "Connexion",
     "register": "S'inscrire",
     "logout": "Déconnexion",
     "email": "Email",
     "password": "Mot de passe"
+  },
+  "home": {
+    "quote": "Recherchez la connaissance du berceau à la tombe",
+    "quoteSource": "Hadith du Prophète Muhammad",
+    "stats": {
+      "questions": "Questions",
+      "languages": "Langues",
+      "categories": "Catégories"
+    },
+    "footer": "Tous droits réservés"
   }
 }

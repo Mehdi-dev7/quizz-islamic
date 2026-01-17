@@ -7,10 +7,10 @@ export default function HomePage() {
   const t = useTranslations();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-blue-50 to-purple-50">
+    <div className="min-h-screen bg-linear-to-br from-green-50 via-blue-50 to-purple-50">
       {/* Header avec sélecteur de langue */}
       <header className="absolute top-0 right-0 p-6">
-        <LanguageSwitcher />
+        <LanguageSwitcher/>
       </header>
 
       {/* Contenu principal */}
@@ -21,7 +21,7 @@ export default function HomePage() {
         </div>
 
         {/* Titre de l'application */}
-        <h1 className="text-5xl md:text-7xl font-bold text-center mb-4 bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent animate-fade-in">
+        <h1 className="text-5xl md:text-7xl font-bold text-center mb-4 bg-linear-to-r from-green-600 to-blue-600 bg-clip-text text-transparent animate-fade-in">
           {t('app.name')}
         </h1>
 
@@ -33,10 +33,10 @@ export default function HomePage() {
         {/* Verset ou Citation inspirante */}
         <div className="mb-12 p-6 bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg max-w-2xl animate-fade-in">
           <p className="text-lg text-gray-700 italic text-center leading-relaxed">
-            "Recherchez la connaissance du berceau à la tombe"
+            "{t('home.quote')}"
           </p>
           <p className="text-sm text-gray-500 text-center mt-2">
-            - Hadith du Prophète Muhammad ﷺ
+            - {t('home.quoteSource')} ﷺ
           </p>
         </div>
 
@@ -44,7 +44,7 @@ export default function HomePage() {
         <div className="flex flex-col sm:flex-row gap-4 w-full max-w-md animate-slide-up">
           <Link
             href="/register"
-            className="flex-1 bg-gradient-to-r from-green-600 to-green-700 text-white px-8 py-4 rounded-xl font-bold text-lg text-center hover:from-green-700 hover:to-green-800 transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl"
+            className="flex-1 bg-linear-to-r from-green-600 to-green-700 text-white px-8 py-4 rounded-xl font-bold text-lg text-center hover:from-green-700 hover:to-green-800 transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl"
           >
             {t('auth.register')}
           </Link>
@@ -62,26 +62,26 @@ export default function HomePage() {
           <div className="bg-white/80 backdrop-blur-sm p-6 rounded-xl shadow-lg text-center transform hover:scale-105 transition-all duration-200">
             <div className="text-4xl mb-2">📚</div>
             <div className="text-2xl font-bold text-green-600 mb-1">400+</div>
-            <div className="text-gray-600">Questions</div>
+            <div className="text-gray-600">{t('home.stats.questions')}</div>
           </div>
 
           <div className="bg-white/80 backdrop-blur-sm p-6 rounded-xl shadow-lg text-center transform hover:scale-105 transition-all duration-200">
             <div className="text-4xl mb-2">🌍</div>
             <div className="text-2xl font-bold text-blue-600 mb-1">3</div>
-            <div className="text-gray-600">Langues</div>
+            <div className="text-gray-600">{t('home.stats.languages')}</div>
           </div>
 
           <div className="bg-white/80 backdrop-blur-sm p-6 rounded-xl shadow-lg text-center transform hover:scale-105 transition-all duration-200">
             <div className="text-4xl mb-2">🎯</div>
             <div className="text-2xl font-bold text-purple-600 mb-1">4</div>
-            <div className="text-gray-600">Catégories</div>
+            <div className="text-gray-600">{t('home.stats.categories')}</div>
           </div>
         </div>
       </div>
 
       {/* Footer */}
       <footer className="absolute bottom-0 w-full p-6 text-center text-gray-500 text-sm">
-        <p>© 2025 Quiz Islamic - Tous droits réservés</p>
+        <p>© 2025 {t('app.name')} - {t('home.footer')}</p>
       </footer>
     </div>
   );

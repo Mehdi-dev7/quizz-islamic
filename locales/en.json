@@ -1,9 +1,23 @@
 {
+  "app": {
+    "name": "Islamic Quiz",
+    "tagline": "Test and deepen your knowledge of Islam"
+  },
   "auth": {
     "login": "Login",
     "register": "Register",
     "logout": "Logout",
     "email": "Email",
     "password": "Password"
+  },
+  "home": {
+    "quote": "Seek knowledge from the cradle to the grave",
+    "quoteSource": "Hadith of Prophet Muhammad",
+    "stats": {
+      "questions": "Questions",
+      "languages": "Languages",
+      "categories": "Categories"
+    },
+    "footer": "All rights reserved"
   }
 }

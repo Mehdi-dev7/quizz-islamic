@@ -42,7 +42,7 @@ export function CategoryCard({ slug, icon, color, borderColor }: CategoryCardPro
         {/* Badge "Mode entraînement" */}
         <div className={`
           inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-semibold
-          bg-gradient-to-r ${color} text-white
+          bg-linear-to-r ${color} text-white
         `}>
           <span>🏋️</span>
           <span>{t('training', { ns: 'quiz' })}</span>
