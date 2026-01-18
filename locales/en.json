@@ -8,7 +8,26 @@
     "register": "Register",
     "logout": "Logout",
     "email": "Email",
-    "password": "Password"
+    "password": "Password",
+    "username": "Username",
+    "confirmPassword": "Confirm password",
+    "alreadyHaveAccount": "Already have an account?",
+    "dontHaveAccount": "Don't have an account?",
+    "loginToAccount": "Log in to your account",
+    "backToHome": "Back to home",
+    "loading": "Loading...",
+    "passwordRules": {
+      "minLength": "8 characters minimum",
+      "uppercase": "One uppercase letter",
+      "number": "One number",
+      "special": "One special character (!@#$%...)"
+    },
+    "errors": {
+      "usernameTooShort": "Username must be at least 3 characters",
+      "passwordRequirements": "Password does not meet requirements",
+      "passwordsDontMatch": "Passwords do not match",
+      "invalidCredentials": "Invalid credentials"
+    }
   },
   "home": {
     "quote": "Seek knowledge from the cradle to the grave",
@@ -19,5 +38,43 @@
       "categories": "Categories"
     },
     "footer": "All rights reserved"
+  },
+  "categories": {
+    "title": "Categories",
+    "chooseCategory": "Choose a category to practice",
+    "vie-prophete": {
+      "name": "Life of the Prophet",
+      "description": "Discover the life and teachings of Prophet Muhammad ﷺ"
+    },
+    "jeune": {
+      "name": "Fasting",
+      "description": "Learn the rules and spirituality of fasting in Islam"
+    },
+    "histoires-prophetes": {
+      "name": "Stories of the Prophets",
+      "description": "Explore the stories of prophets mentioned in the Quran"
+    },
+    "salat": {
+      "name": "Prayer (Salat)",
+      "description": "Master the rules and conditions of prayer"
+    }
+  },
+  "quiz": {
+    "exam": "Final Exam",
+    "examDescription": "Test your knowledge on all categories!",
+    "training": "Training",
+    "startExam": "Take the exam",
+    "leaderboard": "Leaderboard",
+    "profile": "My profile",
+    "examDetails": {
+      "questionsPerCategory": "10 questions per category (40 questions)",
+      "bonusQuestions": "5 very difficult bonus questions",
+      "scoreInLeaderboard": "Your score will appear in the leaderboard"
+    }
+  },
+  "user": {
+    "welcome": "Welcome, {name}!",
+    "level": "Level {level}",
+    "xpForNextLevel": "{xp} XP for level {nextLevel}"
   }
 }

@@ -2,6 +2,8 @@
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import { LanguageSwitcher } from '@/components/layout/LanguageSwitcher';
+import Image from 'next/image';
+import  Logo  from '@/public/pngtree-islamic-mosque-logo-transparent-background-png-image_15036132.png'
 
 export default function HomePage() {
   const t = useTranslations();
@@ -16,8 +18,8 @@ export default function HomePage() {
       {/* Contenu principal */}
       <div className="flex flex-col items-center justify-center min-h-screen px-4">
         {/* Logo ou Icône (optionnel) */}
-        <div className="mb-8 text-8xl animate-bounce-in">
-          🕌
+        <div className="mb-2 text-8xl animate-bounce-in">
+          <Image src={Logo} alt="Logo" width={250} height={250} />
         </div>
 
         {/* Titre de l'application */}

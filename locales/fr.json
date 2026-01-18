@@ -8,7 +8,26 @@
     "register": "S'inscrire",
     "logout": "Déconnexion",
     "email": "Email",
-    "password": "Mot de passe"
+    "password": "Mot de passe",
+    "username": "Nom d'utilisateur",
+    "confirmPassword": "Confirmer le mot de passe",
+    "alreadyHaveAccount": "Vous avez déjà un compte ?",
+    "dontHaveAccount": "Vous n'avez pas de compte ?",
+    "loginToAccount": "Connectez-vous à votre compte",
+    "backToHome": "Retour à l'accueil",
+    "loading": "Chargement...",
+    "passwordRules": {
+      "minLength": "8 caractères minimum",
+      "uppercase": "Une lettre majuscule",
+      "number": "Un chiffre",
+      "special": "Un caractère spécial (!@#$%...)"
+    },
+    "errors": {
+      "usernameTooShort": "Le nom d'utilisateur doit contenir au moins 3 caractères",
+      "passwordRequirements": "Le mot de passe ne respecte pas les critères requis",
+      "passwordsDontMatch": "Les mots de passe ne correspondent pas",
+      "invalidCredentials": "Identifiants invalides"
+    }
   },
   "home": {
     "quote": "Recherchez la connaissance du berceau à la tombe",
@@ -19,5 +38,43 @@
       "categories": "Catégories"
     },
     "footer": "Tous droits réservés"
+  },
+  "categories": {
+    "title": "Catégories",
+    "chooseCategory": "Choisissez une catégorie pour vous entraîner",
+    "vie-prophete": {
+      "name": "Vie du Prophète",
+      "description": "Découvrez la vie et les enseignements du Prophète Muhammad ﷺ"
+    },
+    "jeune": {
+      "name": "Le Jeûne",
+      "description": "Apprenez les règles et la spiritualité du jeûne en Islam"
+    },
+    "histoires-prophetes": {
+      "name": "Histoires des Prophètes",
+      "description": "Explorez les récits des prophètes mentionnés dans le Coran"
+    },
+    "salat": {
+      "name": "La Prière (Salat)",
+      "description": "Maîtrisez les règles et les conditions de la prière"
+    }
+  },
+  "quiz": {
+    "exam": "Examen Final",
+    "examDescription": "Testez vos connaissances sur toutes les catégories !",
+    "training": "Entraînement",
+    "startExam": "Passer l'examen",
+    "leaderboard": "Classement",
+    "profile": "Mon profil",
+    "examDetails": {
+      "questionsPerCategory": "10 questions par catégorie (40 questions)",
+      "bonusQuestions": "5 questions bonus très difficiles",
+      "scoreInLeaderboard": "Votre score apparaîtra dans le classement"
+    }
+  },
+  "user": {
+    "welcome": "Bienvenue, {name} !",
+    "level": "Niveau {level}",
+    "xpForNextLevel": "{xp} XP pour le niveau {nextLevel}"
   }
 }

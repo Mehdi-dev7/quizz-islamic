@@ -11,18 +11,20 @@ interface CategoryCardProps {
 
 export function CategoryCard({ slug, icon, color, borderColor }: CategoryCardProps) {
   const t = useTranslations('categories');
+  const tQuiz = useTranslations('quiz');
 
   return (
     <Link
       href={`/training/${slug}`}
-      className="group"
+      className="group h-full"
     >
       <div className={`
-        bg-white rounded-2xl shadow-lg p-6 
+        bg-white rounded-2xl shadow-lg p-6 h-full
         border-4 ${borderColor}
         transform hover:scale-105 hover:shadow-2xl
         transition-all duration-300
         cursor-pointer
+        flex flex-col
       `}>
         {/* Icône */}
         <div className="text-6xl mb-4 group-hover:scale-110 transition-transform duration-300">
@@ -35,17 +37,17 @@ export function CategoryCard({ slug, icon, color, borderColor }: CategoryCardPro
         </h3>
 
         {/* Description */}
-        <p className="text-gray-600 text-sm mb-4">
+        <p className="text-gray-600 text-sm mb-4 flex-grow">
           {t(`${slug}.description`)}
         </p>
 
         {/* Badge "Mode entraînement" */}
         <div className={`
           inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-semibold
-          bg-linear-to-r ${color} text-white
+          bg-linear-to-r ${color} text-white self-start
         `}>
           <span>🏋️</span>
-          <span>{t('training', { ns: 'quiz' })}</span>
+          <span>{tQuiz('training')}</span>
         </div>
       </div>
     </Link>

@@ -8,7 +8,26 @@
     "register": "التسجيل",
     "logout": "تسجيل الخروج",
     "email": "البريد الإلكتروني",
-    "password": "كلمة المرور"
+    "password": "كلمة المرور",
+    "username": "اسم المستخدم",
+    "confirmPassword": "تأكيد كلمة المرور",
+    "alreadyHaveAccount": "هل لديك حساب بالفعل؟",
+    "dontHaveAccount": "ليس لديك حساب؟",
+    "loginToAccount": "سجّل الدخول إلى حسابك",
+    "backToHome": "العودة إلى الصفحة الرئيسية",
+    "loading": "جاري التحميل...",
+    "passwordRules": {
+      "minLength": "8 أحرف على الأقل",
+      "uppercase": "حرف كبير واحد",
+      "number": "رقم واحد",
+      "special": "رمز خاص واحد (!@#$%...)"
+    },
+    "errors": {
+      "usernameTooShort": "يجب أن يحتوي اسم المستخدم على 3 أحرف على الأقل",
+      "passwordRequirements": "كلمة المرور لا تستوفي المتطلبات",
+      "passwordsDontMatch": "كلمات المرور غير متطابقة",
+      "invalidCredentials": "بيانات الاعتماد غير صالحة"
+    }
   },
   "home": {
     "quote": "اطلبوا العلم من المهد إلى اللحد",
@@ -19,5 +38,43 @@
       "categories": "فئات"
     },
     "footer": "جميع الحقوق محفوظة"
+  },
+  "categories": {
+    "title": "الفئات",
+    "chooseCategory": "اختر فئة للتدريب",
+    "vie-prophete": {
+      "name": "حياة النبي",
+      "description": "اكتشف حياة وتعاليم النبي محمد ﷺ"
+    },
+    "jeune": {
+      "name": "الصيام",
+      "description": "تعلم أحكام وروحانية الصيام في الإسلام"
+    },
+    "histoires-prophetes": {
+      "name": "قصص الأنبياء",
+      "description": "استكشف قصص الأنبياء المذكورين في القرآن"
+    },
+    "salat": {
+      "name": "الصلاة",
+      "description": "أتقن أحكام وشروط الصلاة"
+    }
+  },
+  "quiz": {
+    "exam": "الامتحان النهائي",
+    "examDescription": "اختبر معرفتك في جميع الفئات!",
+    "training": "تدريب",
+    "startExam": "ابدأ الامتحان",
+    "leaderboard": "لوحة المتصدرين",
+    "profile": "ملفي الشخصي",
+    "examDetails": {
+      "questionsPerCategory": "10 أسئلة لكل فئة (40 سؤال)",
+      "bonusQuestions": "5 أسئلة إضافية صعبة جداً",
+      "scoreInLeaderboard": "ستظهر نتيجتك في لوحة المتصدرين"
+    }
+  },
+  "user": {
+    "welcome": "مرحباً، {name}!",
+    "level": "المستوى {level}",
+    "xpForNextLevel": "{xp} نقطة خبرة للمستوى {nextLevel}"
   }
 }
