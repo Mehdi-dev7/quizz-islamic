@@ -1,6 +1,6 @@
-@import "tailwindcss";
-
 @import url('https://fonts.googleapis.com/css2?family=Macondo&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+
+@import "tailwindcss";
 
 :root {
   --primary: #16a34a;      /* Vert islamique */
@@ -21,10 +21,10 @@ body {
   background-color: var(--background);
 }
 
-@utility Macondo {
+@utility font-macondo {
   font-family: 'Macondo', cursive !important;
 }
 
-@utility Roboto {
+@utility font-roboto {
   font-family: 'Roboto', sans-serif !important;
 }

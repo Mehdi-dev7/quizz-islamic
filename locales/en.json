@@ -70,7 +70,8 @@
       "questionsPerCategory": "10 questions per category (40 questions)",
       "bonusQuestions": "5 very difficult bonus questions",
       "scoreInLeaderboard": "Your score will appear in the leaderboard"
-    }
+    },
+    "questions": "questions"
   },
   "user": {
     "welcome": "Welcome, {name}!",

@@ -70,7 +70,8 @@
       "questionsPerCategory": "10 أسئلة لكل فئة (40 سؤال)",
       "bonusQuestions": "5 أسئلة إضافية صعبة جداً",
       "scoreInLeaderboard": "ستظهر نتيجتك في لوحة المتصدرين"
-    }
+    },
+    "questions": "أسئلة"
   },
   "user": {
     "welcome": "مرحباً، {name}!",

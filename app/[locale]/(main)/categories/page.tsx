@@ -1,4 +1,3 @@
-// src/app/[locale]/(main)/categories/page.tsx
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -8,39 +7,17 @@ import { useTranslations } from 'next-intl';
 import { CategoryCard } from '@/components/categories/CategoryCard';
 import { LanguageSwitcher } from '@/components/layout/LanguageSwitcher';
 import Image from 'next/image';
-import  Logo  from '@/public/pngtree-islamic-mosque-logo-transparent-background-png-image_15036132.png'
+import Logo from '@/public/pngtree-islamic-mosque-logo-transparent-background-png-image_15036132.png';
 
-// Note : Dans une vraie app, ces données viendraient de la base de données
-const categories = [
-  {
-    id: '1',
-    slug: 'vie-prophete',
-    icon: '📿',
-    color: 'from-green-500 to-green-600',
-    borderColor: 'border-green-500',
-  },
-  {
-    id: '2',
-    slug: 'jeune',
-    icon: '🌙',
-    color: 'from-blue-500 to-blue-600',
-    borderColor: 'border-blue-500',
-  },
-  {
-    id: '3',
-    slug: 'histoires-prophetes',
-    icon: '📖',
-    color: 'from-purple-500 to-purple-600',
-    borderColor: 'border-purple-500',
-  },
-  {
-    id: '4',
-    slug: 'salat',
-    icon: '🕌',
-    color: 'from-orange-500 to-orange-600',
-    borderColor: 'border-orange-500',
-  },
-];
+
+interface Category {
+  _id: string;
+  slug: string;
+  icon: string;
+  color: string;
+  borderColor: string;
+  questionCount: number;
+}
 
 interface User {
   id: string;
@@ -55,44 +32,49 @@ export default function CategoriesPage() {
   const router = useRouter();
 
   const [user, setUser] = useState<User | null>(null);
+  const [categories, setCategories] = useState<Category[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Récupérer les données de l'utilisateur connecté
+  // Charger l'utilisateur et les catégories en parallèle
   useEffect(() => {
-    async function fetchUser() {
+    async function loadData() {
       try {
-        const response = await fetch('/api/auth/me');
+        const [userRes, catsRes] = await Promise.all([
+          fetch('/api/auth/me'),
+          fetch('/api/categories'),
+        ]);
 
-        if (!response.ok) {
-          // Non authentifié, rediriger vers login
+        // Rediriger si non authentifié
+        if (!userRes.ok) {
           router.push('/login');
           return;
         }
 
-        const data = await response.json();
-        setUser(data.user);
+        const userData = await userRes.json();
+        const catsData = await catsRes.json();
+
+        setUser(userData.user);
+        setCategories(catsData.categories ?? []);
       } catch (error) {
-        console.error('Erreur:', error);
+        console.error('Erreur chargement:', error);
         router.push('/login');
       } finally {
         setIsLoading(false);
       }
     }
 
-    fetchUser();
+    loadData();
   }, [router]);
 
-  // Fonction de déconnexion
   const handleLogout = async () => {
     try {
       await fetch('/api/auth/logout', { method: 'POST' });
       router.push('/login');
     } catch (error) {
-      console.error('Erreur lors de la déconnexion:', error);
+      console.error('Erreur déconnexion:', error);
     }
   };
 
-  // Afficher un loader pendant le chargement
   if (isLoading) {
     return (
       <div className="min-h-screen bg-linear-to-br from-green-50 via-blue-50 to-purple-50 flex items-center justify-center">
@@ -104,10 +86,7 @@ export default function CategoriesPage() {
     );
   }
 
-  // Si pas d'utilisateur, ne rien afficher (redirection en cours)
-  if (!user) {
-    return null;
-  }
+  if (!user) return null;
 
   const xpProgress = (user.xp / user.xpForNextLevel) * 100;
 
@@ -117,17 +96,12 @@ export default function CategoriesPage() {
       <header className="bg-white shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
-            {/* Logo et Titre */}
             <div className="flex items-center gap-3">
-              <div className="text-4xl">
-                <Image src={Logo} alt="Logo" width={80} height={80} />
-              </div>
+              <Image src={Logo} alt="Logo" width={80} height={80} />
               <h1 className="text-4xl text-(--primary) font-semibold Macondo">
                 {t('app.name')}
               </h1>
             </div>
-
-            {/* Sélecteur de langue */}
             <LanguageSwitcher />
           </div>
         </div>
@@ -135,7 +109,7 @@ export default function CategoriesPage() {
 
       {/* Contenu principal */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {/* Informations utilisateur */}
+        {/* Carte utilisateur + XP */}
         <div className="bg-white rounded-2xl shadow-lg p-6 mb-8">
           <div className="flex items-center justify-between mb-4">
             <div>
@@ -147,7 +121,6 @@ export default function CategoriesPage() {
               </p>
             </div>
 
-            {/* Bouton de déconnexion */}
             <button
               onClick={handleLogout}
               className="flex items-center gap-2 px-4 py-2 text-gray-600 hover:text-red-600 font-medium cursor-pointer transition-colors duration-200"
@@ -159,8 +132,8 @@ export default function CategoriesPage() {
             </button>
           </div>
 
-          {/* Barre de progression XP */}
-          <div className="relative">
+          {/* Barre XP */}
+          <div>
             <div className="h-3 bg-gray-200 rounded-full overflow-hidden">
               <div
                 className="h-full bg-linear-to-r from-green-500 to-blue-500 transition-all duration-500"
@@ -173,7 +146,7 @@ export default function CategoriesPage() {
           </div>
         </div>
 
-        {/* Titre des catégories */}
+        {/* Titre */}
         <div className="mb-8">
           <h3 className="text-3xl font-bold text-gray-900 mb-2">
             {t('categories.title')}
@@ -184,17 +157,25 @@ export default function CategoriesPage() {
         </div>
 
         {/* Grille des catégories */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-          {categories.map((category) => (
-            <CategoryCard
-              key={category.id}
-              slug={category.slug}
-              icon={category.icon}
-              color={category.color}
-              borderColor={category.borderColor}
-            />
-          ))}
-        </div>
+        {categories.length === 0 ? (
+          <div className="text-center py-12 text-gray-500">
+            <div className="text-5xl mb-4">📭</div>
+            <p>Aucune catégorie disponible pour l&apos;instant.</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+            {categories.map((category) => (
+              <CategoryCard
+                key={category._id}
+                slug={category.slug}
+                icon={category.icon}
+                color={category.color}
+                borderColor={category.borderColor}
+                questionCount={category.questionCount}
+              />
+            ))}
+          </div>
+        )}
 
         {/* Section Examen */}
         <div className="bg-linear-to-r from-yellow-50 to-orange-50 rounded-2xl shadow-xl p-8 border-4 border-yellow-400">
@@ -228,16 +209,10 @@ export default function CategoriesPage() {
 
         {/* Liens rapides */}
         <div className="mt-8 flex justify-center gap-6">
-          <Link
-            href="/leaderboard"
-            className="text-blue-600 hover:text-blue-800 font-semibold flex items-center gap-2"
-          >
+          <Link href="/leaderboard" className="text-blue-600 hover:text-blue-800 font-semibold flex items-center gap-2">
             🏅 {t('quiz.leaderboard')}
           </Link>
-          <Link
-            href="/profile"
-            className="text-purple-600 hover:text-purple-800 font-semibold flex items-center gap-2"
-          >
+          <Link href="/profile" className="text-purple-600 hover:text-purple-800 font-semibold flex items-center gap-2">
             👤 {t('quiz.profile')}
           </Link>
         </div>

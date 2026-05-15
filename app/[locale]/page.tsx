@@ -83,7 +83,7 @@ export default function HomePage() {
 
       {/* Footer */}
       <footer className="absolute bottom-0 w-full p-6 text-center text-gray-500 text-sm">
-        <p>© 2025 {t('app.name')} - {t('home.footer')}</p>
+        <p>© 2026 {t('app.name')} - {t('home.footer')}</p>
       </footer>
     </div>
   );

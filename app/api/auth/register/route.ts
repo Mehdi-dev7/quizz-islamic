@@ -1,86 +1,52 @@
 import { NextRequest, NextResponse } from 'next/server';
 import bcrypt from 'bcrypt';
-import { prisma } from '@/lib/db';
+import { connectDB } from '@/lib/db';
+import { User } from '@/lib/models/User';
 import { signToken, setAuthCookie } from '@/lib/jwt';
 
 export async function POST(request: NextRequest) {
   try {
     const { pseudo, password } = await request.json();
 
-    // Validation
     if (!pseudo || !password) {
-      return NextResponse.json(
-        { message: 'Pseudo et mot de passe requis' },
-        { status: 400 }
-      );
+      return NextResponse.json({ message: 'Pseudo et mot de passe requis' }, { status: 400 });
     }
-
     if (pseudo.length < 3) {
+      return NextResponse.json({ message: 'Le pseudo doit contenir au moins 3 caractères' }, { status: 400 });
+    }
+
+    const ok =
+      password.length >= 8 &&
+      /[A-Z]/.test(password) &&
+      /[0-9]/.test(password) &&
+      /[!@#$%^&*(),.?":{}|<>]/.test(password);
+
+    if (!ok) {
       return NextResponse.json(
-        { message: 'Le pseudo doit contenir au moins 3 caractères' },
+        { message: 'Le mot de passe doit contenir 8 caractères, une majuscule, un chiffre et un caractère spécial' },
         { status: 400 }
       );
     }
 
-    // Vérifier les critères du mot de passe
-    const passwordChecks = {
-      minLength: password.length >= 8,
-      hasUppercase: /[A-Z]/.test(password),
-      hasNumber: /[0-9]/.test(password),
-      hasSpecial: /[!@#$%^&*(),.?":{}|<>]/.test(password),
-    };
+    await connectDB();
 
-    if (!Object.values(passwordChecks).every(Boolean)) {
-      return NextResponse.json(
-        { message: 'Le mot de passe ne respecte pas les critères requis' },
-        { status: 400 }
-      );
+    const existing = await User.findOne({ pseudo });
+    if (existing) {
+      return NextResponse.json({ message: 'Ce pseudo est déjà utilisé' }, { status: 409 });
     }
 
-    // Vérifier si l'utilisateur existe déjà
-    const existingUser = await prisma.user.findUnique({
-      where: { pseudo },
-    });
+    const hashedPassword = await bcrypt.hash(password, 12);
+    const user = await User.create({ pseudo, password: hashedPassword });
 
-    if (existingUser) {
-      return NextResponse.json(
-        { message: 'Ce pseudo est déjà utilisé' },
-        { status: 409 }
-      );
-    }
-
-    // Hasher le mot de passe avec bcrypt
-    const saltRounds = 12;
-    const hashedPassword = await bcrypt.hash(password, saltRounds);
-
-    // Créer l'utilisateur
-    const user = await prisma.user.create({
-      data: {
-        pseudo,
-        password: hashedPassword,
-      },
-      select: {
-        id: true,
-        pseudo: true,
-        level: true,
-        xp: true,
-        createdAt: true,
-      },
-    });
-
-    // Créer et définir le token JWT
-    const token = signToken({ userId: user.id, pseudo: user.pseudo });
+    const token = signToken({ userId: user._id.toString(), pseudo: user.pseudo });
     await setAuthCookie(token);
 
     return NextResponse.json(
-      { message: 'Inscription réussie', user },
+      { message: 'Inscription réussie', user: { id: user._id, pseudo: user.pseudo, level: user.level, xp: user.xp, avatar: user.avatar } },
       { status: 201 }
     );
   } catch (error) {
-    console.error('Erreur lors de l\'inscription:', error);
-    return NextResponse.json(
-      { message: 'Erreur serveur' },
-      { status: 500 }
-    );
+    console.error('Erreur inscription:', error);
+    return NextResponse.json({ message: 'Erreur serveur' }, { status: 500 });
   }
 }

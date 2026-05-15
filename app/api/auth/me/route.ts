@@ -1,54 +1,31 @@
 import { NextResponse } from 'next/server';
-import { prisma } from '@/lib/db';
+import { connectDB } from '@/lib/db';
+import { User } from '@/lib/models/User';
 import { getAuthFromCookie } from '@/lib/jwt';
 
 export async function GET() {
   try {
-    // Récupérer l'utilisateur depuis le cookie JWT
     const auth = await getAuthFromCookie();
 
     if (!auth) {
-      return NextResponse.json(
-        { message: 'Non authentifié' },
-        { status: 401 }
-      );
+      return NextResponse.json({ message: 'Non authentifié' }, { status: 401 });
     }
 
-    // Récupérer les données complètes de l'utilisateur
-    const user = await prisma.user.findUnique({
-      where: { id: auth.userId },
-      select: {
-        id: true,
-        pseudo: true,
-        level: true,
-        xp: true,
-        createdAt: true,
-        updatedAt: true,
-      },
-    });
+    await connectDB();
 
+    const user = await User.findById(auth.userId).select('-password');
     if (!user) {
-      return NextResponse.json(
-        { message: 'Utilisateur non trouvé' },
-        { status: 404 }
-      );
+      return NextResponse.json({ message: 'Utilisateur non trouvé' }, { status: 404 });
     }
 
-    // Calculer l'XP nécessaire pour le prochain niveau
-    // Formule simple : niveau * 100 XP pour passer au niveau suivant
+    // XP requis pour le niveau suivant : niveau actuel × 100
     const xpForNextLevel = user.level * 100;
 
     return NextResponse.json({
-      user: {
-        ...user,
-        xpForNextLevel,
-      },
+      user: { id: user._id, pseudo: user.pseudo, level: user.level, xp: user.xp, avatar: user.avatar, xpForNextLevel }
     });
   } catch (error) {
-    console.error('Erreur lors de la récupération de l\'utilisateur:', error);
-    return NextResponse.json(
-      { message: 'Erreur serveur' },
-      { status: 500 }
-    );
+    console.error('Erreur /me:', error);
+    return NextResponse.json({ message: 'Erreur serveur' }, { status: 500 });
   }
 }
