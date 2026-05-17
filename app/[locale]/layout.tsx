@@ -29,6 +29,9 @@ const roboto = Roboto({
 export const metadata = {
   title: 'Quizz Islamic',
   description: '',
+  icons: {
+    icon: [{ url: '/pngtree-islamic-mosque-logo-transparent-background-png-image_15036132.png', type: 'image/png' }],
+  },
 };
 
 type Props = {
