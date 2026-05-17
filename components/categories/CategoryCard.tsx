@@ -2,21 +2,24 @@
 
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
+import { useParams } from 'next/navigation';
 
 interface CategoryCardProps {
   slug: string;
   icon: string;
-  color: string;        // classe Tailwind gradient ex: "from-green-500 to-green-600"
-  borderColor: string;  // classe Tailwind border ex: "border-green-500"
+  color: string;
+  borderColor: string;
   questionCount?: number;
 }
 
 export function CategoryCard({ slug, icon, color, borderColor, questionCount }: CategoryCardProps) {
   const t = useTranslations('categories');
   const tQuiz = useTranslations('quiz');
+  const params = useParams();
+  const locale = params.locale as string;
 
   return (
-    <Link href={`/training/${slug}`} className="group h-full">
+    <Link href={`/${locale}/training/${slug}`} className="group h-full">
       <div className={`
         bg-white rounded-2xl shadow-lg p-6 h-full
         border-4 ${borderColor}

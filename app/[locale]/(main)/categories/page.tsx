@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { CategoryCard } from '@/components/categories/CategoryCard';
 import { LanguageSwitcher } from '@/components/layout/LanguageSwitcher';
@@ -30,6 +30,8 @@ interface User {
 export default function CategoriesPage() {
   const t = useTranslations();
   const router = useRouter();
+  const params = useParams();
+  const locale = params.locale as string;
 
   const [user, setUser] = useState<User | null>(null);
   const [categories, setCategories] = useState<Category[]>([]);
@@ -132,17 +134,37 @@ export default function CategoriesPage() {
             </button>
           </div>
 
-          {/* Barre XP */}
+          {/* Barre XP + difficulté débloquée */}
           <div>
+            <div className="flex items-center justify-between mb-1">
+              <span className="text-xs text-gray-500 font-medium">
+                {user.xp} / {user.xpForNextLevel} XP
+              </span>
+              <span className="text-xs text-gray-500">
+                {t('user.xpForNextLevel', { xp: user.xpForNextLevel - user.xp, nextLevel: user.level + 1 })}
+              </span>
+            </div>
             <div className="h-3 bg-gray-200 rounded-full overflow-hidden">
               <div
                 className="h-full bg-linear-to-r from-green-500 to-blue-500 transition-all duration-500"
                 style={{ width: `${xpProgress}%` }}
               />
             </div>
-            <p className="text-xs text-gray-500 mt-1 text-right">
-              {t('user.xpForNextLevel', { xp: user.xpForNextLevel - user.xp, nextLevel: user.level + 1 })}
-            </p>
+            {/* Difficulté débloquée */}
+            <div className="flex items-center gap-2 mt-3 p-3 bg-emerald-50 border border-emerald-100 rounded-xl">
+              <span className="text-base">{'⚡'.repeat(Math.min(user.level + 1, 5))}</span>
+              <span className="text-sm text-emerald-700 font-medium">
+                Difficulté débloquée — questions jusqu&apos;à{' '}
+                <strong>
+                  {['', 'Très facile', 'Facile', 'Moyen', 'Difficile', 'Expert'][Math.min(user.level + 1, 5)]}
+                </strong>
+              </span>
+              {user.level < 4 && (
+                <span className="ml-auto text-xs text-gray-400">
+                  Niveau {user.level + 1} → {'⚡'.repeat(Math.min(user.level + 2, 5))}
+                </span>
+              )}
+            </div>
           </div>
         </div>
 
@@ -198,7 +220,7 @@ export default function CategoriesPage() {
             </div>
 
             <Link
-              href="/exam"
+              href={`/${locale}/exam`}
               className="bg-linear-to-r from-yellow-500 to-orange-500 text-white px-12 py-5 rounded-xl font-bold text-2xl hover:from-yellow-600 hover:to-orange-600 transform hover:scale-105 transition-all duration-200 shadow-2xl flex items-center gap-3 whitespace-nowrap"
             >
               <span>🎯</span>
@@ -209,11 +231,8 @@ export default function CategoriesPage() {
 
         {/* Liens rapides */}
         <div className="mt-8 flex justify-center gap-6">
-          <Link href="/leaderboard" className="text-blue-600 hover:text-blue-800 font-semibold flex items-center gap-2">
+          <Link href={`/${locale}/leaderboard`} className="text-blue-600 hover:text-blue-800 font-semibold flex items-center gap-2">
             🏅 {t('quiz.leaderboard')}
-          </Link>
-          <Link href="/profile" className="text-purple-600 hover:text-purple-800 font-semibold flex items-center gap-2">
-            👤 {t('quiz.profile')}
           </Link>
         </div>
       </main>

@@ -19,7 +19,7 @@ export async function GET() {
     }
 
     // XP requis pour le niveau suivant : niveau actuel × 100
-    const xpForNextLevel = user.level * 100;
+    const xpForNextLevel = user.level * 200;
 
     return NextResponse.json({
       user: { id: user._id, pseudo: user.pseudo, level: user.level, xp: user.xp, avatar: user.avatar, xpForNextLevel }
