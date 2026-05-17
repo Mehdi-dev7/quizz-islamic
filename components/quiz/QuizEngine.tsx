@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { LanguageSwitcher } from '@/components/layout/LanguageSwitcher';
 
@@ -31,6 +31,22 @@ export function QuizEngine({ questions, mode, title, onComplete }: QuizEnginePro
   const params = useParams();
   const locale = params.locale as string;
 
+  // Mélange les options une fois à l'init — empêche de mémoriser la position de la réponse
+  const shuffledQuestions = useMemo(() => {
+    return questions.map(q => {
+      const pairs = q.options.map((opt, i) => ({ opt, originalIndex: i + 1 }));
+      for (let i = pairs.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [pairs[i], pairs[j]] = [pairs[j], pairs[i]];
+      }
+      return {
+        ...q,
+        options: pairs.map(p => p.opt),
+        correctAnswer: pairs.findIndex(p => p.originalIndex === q.correctAnswer) + 1,
+      };
+    });
+  }, [questions]);
+
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const [showFeedback, setShowFeedback] = useState(false);
@@ -45,9 +61,9 @@ export function QuizEngine({ questions, mode, title, onComplete }: QuizEnginePro
     if (confirmed) router.push(`/${locale}/categories`);
   };
 
-  const current = questions[currentIndex];
-  const isLast = currentIndex === questions.length - 1;
-  const progress = ((currentIndex + (showFeedback ? 1 : 0)) / questions.length) * 100;
+  const current = shuffledQuestions[currentIndex];
+  const isLast = currentIndex === shuffledQuestions.length - 1;
+  const progress = ((currentIndex + (showFeedback ? 1 : 0)) / shuffledQuestions.length) * 100;
 
   const handleSelect = (optNum: number) => {
     if (showFeedback) return;
@@ -118,7 +134,7 @@ export function QuizEngine({ questions, mode, title, onComplete }: QuizEnginePro
               {modeLabel} — {title}
             </span>
             <span className="text-sm font-bold text-stone-400">
-              {currentIndex + 1} / {questions.length}
+              {currentIndex + 1} / {shuffledQuestions.length}
             </span>
           </div>
           <div className="h-2 bg-stone-200 rounded-full overflow-hidden">
