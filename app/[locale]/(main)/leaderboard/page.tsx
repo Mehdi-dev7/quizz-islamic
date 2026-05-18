@@ -139,7 +139,7 @@ export default function LeaderboardPage() {
                   {/* Pseudo + niveau */}
                   <div className="flex-1 min-w-0">
                     <p className={`font-bold truncate text-sm sm:text-base ${entry.userId === currentUserId ? 'text-yellow-300' : 'text-white'}`}>
-                      {entry.pseudo}
+                      {entry.userId === currentUserId ? '—' : entry.pseudo}
                       {entry.userId === currentUserId && (
                         <span className="ml-1.5 text-xs bg-yellow-500 text-black px-1.5 py-0.5 rounded-full font-semibold">{t('you')}</span>
                       )}
@@ -188,7 +188,7 @@ function PodiumCard({ entry, isCurrent, height }: { entry: LeaderboardEntry; isC
       <div className={`bg-white/10 rounded-xl w-full ${height} flex items-end justify-center pb-3`}>
         <div className="text-center">
           <p className={`text-sm font-bold truncate max-w-[80px] ${isCurrent ? 'text-yellow-300' : 'text-white'}`}>
-            {entry.pseudo}
+            {isCurrent ? '—' : entry.pseudo}
           </p>
           <p className="text-white/60 text-xs">{entry.correctAnswers}/{entry.totalQuestions}</p>
         </div>
