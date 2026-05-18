@@ -28,7 +28,7 @@ export function CategoryCard({ slug, icon, color, borderColor, questionCount }: 
         cursor-pointer flex flex-col
       `}>
         {/* Icône */}
-        <div className="text-6xl mb-4 group-hover:scale-110 transition-transform duration-300">
+        <div className="text-5xl sm:text-6xl mb-3 sm:mb-4 group-hover:scale-110 transition-transform duration-300">
           {icon}
         </div>
 

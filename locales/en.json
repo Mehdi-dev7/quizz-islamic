@@ -71,7 +71,84 @@
       "bonusQuestions": "5 very difficult bonus questions",
       "scoreInLeaderboard": "Your score will appear in the leaderboard"
     },
-    "questions": "questions"
+    "questions": "questions",
+    "engine": {
+      "quit": "Quit",
+      "quitSession": "Quit session",
+      "quitConfirmExam": "Quit the exam? Your progress will be lost and the score won't be saved.",
+      "quitConfirmTraining": "Quit the session? Your progress will be lost.",
+      "modeExam": "Exam",
+      "modeTraining": "Training",
+      "correct": "Correct!",
+      "incorrect": "Wrong answer",
+      "correctAnswerLabel": "Correct answer:",
+      "next": "Next →",
+      "viewResults": "View results"
+    }
+  },
+  "exam": {
+    "title": "Final Exam",
+    "description": "Test your knowledge across all categories!",
+    "detail1": "10 questions per category (40 total)",
+    "detail2": "5 very difficult bonus questions",
+    "detail3": "Score saved to leaderboard",
+    "detail4": "Bonus XP for correct answers",
+    "start": "Start exam",
+    "backToCategories": "Back to categories",
+    "preparing": "Preparing exam...",
+    "saving": "Saving score...",
+    "error": "An error occurred",
+    "back": "Back",
+    "done": "Exam complete!",
+    "scoreSaved": "Score saved to leaderboard",
+    "percentage": "% correct answers",
+    "bonusQuestions": "Bonus questions",
+    "xpEarned": "XP earned",
+    "levelUp": "Level {level} reached!",
+    "viewLeaderboard": "View leaderboard"
+  },
+  "leaderboard": {
+    "title": "Leaderboard",
+    "subtitle": "Best exam scores",
+    "loading": "Loading leaderboard...",
+    "error": "Loading error",
+    "back": "Back",
+    "noScores": "No scores yet",
+    "noScoresHint": "Take your first exam!",
+    "takeExam": "Take the exam",
+    "you": "You",
+    "level": "Level {level}",
+    "viewLeaderboard": "View leaderboard",
+    "backToCategories": "Categories"
+  },
+  "training": {
+    "title": "Training",
+    "chooseLevel": "Choose your difficulty level",
+    "back": "Back",
+    "start": "Start →",
+    "yourLevel": "Your level",
+    "noXp": "No XP",
+    "revisionInfo": "Revision mode — easier questions than your level. <strong>No XP earned.</strong>",
+    "unlockedDifficulty": "Unlocked difficulty",
+    "nextLevel": "Next level →",
+    "loadingQuestions": "Loading questions...",
+    "calculatingScore": "Calculating score...",
+    "error": "An error occurred",
+    "difficulties": {
+      "1": "Very easy",
+      "2": "Easy",
+      "3": "Medium",
+      "4": "Hard",
+      "5": "Expert"
+    },
+    "results": {
+      "title": "Training complete!",
+      "percentage": "% correct answers",
+      "revisionNoXp": "Revision mode — no XP earned",
+      "levelUp": "Level {level} reached!",
+      "replay": "Play again",
+      "backToCategories": "Back to categories"
+    }
   },
   "user": {
     "welcome": "Welcome, {name}!",

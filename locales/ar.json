@@ -71,7 +71,84 @@
       "bonusQuestions": "5 أسئلة إضافية صعبة جداً",
       "scoreInLeaderboard": "ستظهر نتيجتك في لوحة المتصدرين"
     },
-    "questions": "أسئلة"
+    "questions": "أسئلة",
+    "engine": {
+      "quit": "خروج",
+      "quitSession": "الخروج من الجلسة",
+      "quitConfirmExam": "هل تريد الخروج من الامتحان؟ ستُفقد تقدمك ولن يُسجَّل النتيجة.",
+      "quitConfirmTraining": "هل تريد الخروج من الجلسة؟ ستُفقد تقدمك.",
+      "modeExam": "امتحان",
+      "modeTraining": "تدريب",
+      "correct": "إجابة صحيحة!",
+      "incorrect": "إجابة خاطئة",
+      "correctAnswerLabel": "الإجابة الصحيحة:",
+      "next": "التالي ←",
+      "viewResults": "عرض النتائج"
+    }
+  },
+  "exam": {
+    "title": "الامتحان النهائي",
+    "description": "اختبر معرفتك في جميع الفئات!",
+    "detail1": "10 أسئلة لكل فئة (40 سؤالاً)",
+    "detail2": "5 أسئلة إضافية صعبة جداً",
+    "detail3": "يُسجَّل النتيجة في الترتيب",
+    "detail4": "نقاط إضافية على الإجابات الصحيحة",
+    "start": "ابدأ الامتحان",
+    "backToCategories": "العودة إلى الفئات",
+    "preparing": "جارٍ تحضير الامتحان...",
+    "saving": "جارٍ حفظ النتيجة...",
+    "error": "حدث خطأ ما",
+    "back": "رجوع",
+    "done": "انتهى الامتحان!",
+    "scoreSaved": "تم تسجيل النتيجة في الترتيب",
+    "percentage": "% إجابات صحيحة",
+    "bonusQuestions": "أسئلة إضافية",
+    "xpEarned": "نقاط مكتسبة",
+    "levelUp": "وصلت إلى المستوى {level}!",
+    "viewLeaderboard": "عرض الترتيب"
+  },
+  "leaderboard": {
+    "title": "لوحة المتصدرين",
+    "subtitle": "أفضل نتائج الامتحان",
+    "loading": "جارٍ تحميل الترتيب...",
+    "error": "خطأ في التحميل",
+    "back": "رجوع",
+    "noScores": "لا توجد نتائج بعد",
+    "noScoresHint": "أجرِ امتحانك الأول!",
+    "takeExam": "ابدأ الامتحان",
+    "you": "أنت",
+    "level": "المستوى {level}",
+    "viewLeaderboard": "عرض الترتيب",
+    "backToCategories": "الفئات"
+  },
+  "training": {
+    "title": "تدريب",
+    "chooseLevel": "اختر مستوى الصعوبة",
+    "back": "رجوع",
+    "start": "ابدأ ←",
+    "yourLevel": "مستواك",
+    "noXp": "بدون نقاط",
+    "revisionInfo": "وضع المراجعة — أسئلة أسهل من مستواك. <strong>لا نقاط خبرة.</strong>",
+    "unlockedDifficulty": "الصعوبة المفتوحة",
+    "nextLevel": "المستوى التالي ←",
+    "loadingQuestions": "جارٍ تحميل الأسئلة...",
+    "calculatingScore": "جارٍ حساب النتيجة...",
+    "error": "حدث خطأ ما",
+    "difficulties": {
+      "1": "سهل جداً",
+      "2": "سهل",
+      "3": "متوسط",
+      "4": "صعب",
+      "5": "خبير"
+    },
+    "results": {
+      "title": "انتهى التدريب!",
+      "percentage": "% إجابات صحيحة",
+      "revisionNoXp": "وضع المراجعة — لا نقاط خبرة",
+      "levelUp": "وصلت إلى المستوى {level}!",
+      "replay": "إعادة اللعب",
+      "backToCategories": "العودة إلى الفئات"
+    }
   },
   "user": {
     "welcome": "مرحباً، {name}!",

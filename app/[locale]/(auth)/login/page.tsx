@@ -59,7 +59,7 @@ export default function LoginPage() {
       // Succès ! Rediriger vers les catégories
       router.push('/categories');
     } catch (err) {
-      setError('Une erreur est survenue');
+      setError(t('errors.invalidCredentials'));
       setIsLoading(false);
     }
   };
@@ -76,7 +76,7 @@ export default function LoginPage() {
             {t('login')}
           </h1>
           <p className="text-gray-600">
-            Connectez-vous à votre compte
+            {t('loginToAccount')}
           </p>
         </div>
 
@@ -101,7 +101,7 @@ export default function LoginPage() {
                 value={formData.pseudo}
                 onChange={(e) => setFormData({ ...formData, pseudo: e.target.value })}
                 className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500/30 transition-all duration-200"
-                placeholder="Votre pseudo"
+                placeholder={t('username')}
                 required
                 minLength={3}
               />
@@ -154,7 +154,7 @@ export default function LoginPage() {
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                   </svg>
-                  Chargement...
+                  {t('loading')}
                 </span>
               ) : (
                 t('login')
@@ -176,7 +176,7 @@ export default function LoginPage() {
         {/* Retour à l'accueil */}
         <div className="mt-6 text-center">
           <Link href="/" className="text-gray-600 hover:text-gray-800 text-sm">
-            ← Retour à l'accueil
+            {t('backToHome')}
           </Link>
         </div>
       </div>

@@ -29,6 +29,7 @@ interface User {
 
 export default function CategoriesPage() {
   const t = useTranslations();
+  const tTraining = useTranslations('training');
   const router = useRouter();
   const params = useParams();
   const locale = params.locale as string;
@@ -98,9 +99,9 @@ export default function CategoriesPage() {
       <header className="bg-white shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <Image src={Logo} alt="Logo" width={80} height={80} />
-              <h1 className="text-4xl text-(--primary) font-semibold Macondo">
+            <div className="flex items-center gap-2 sm:gap-3">
+              <Image src={Logo} alt="Logo" width={40} height={40} className="sm:w-[80px] sm:h-[80px]" />
+              <h1 className="text-xl sm:text-4xl text-(--primary) font-semibold Macondo">
                 {t('app.name')}
               </h1>
             </div>
@@ -110,12 +111,12 @@ export default function CategoriesPage() {
       </header>
 
       {/* Contenu principal */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <main className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-6 sm:py-12">
         {/* Carte utilisateur + XP */}
-        <div className="bg-white rounded-2xl shadow-lg p-6 mb-8">
+        <div className="bg-white rounded-2xl shadow-lg p-2 sm:p-6 mb-8">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h2 className="text-2xl font-bold text-gray-900">
+              <h2 className="text-xl sm:text-2xl font-bold text-gray-900">
                 {t('user.welcome', { name: user.pseudo })} 👋
               </h2>
               <p className="text-gray-600 mt-1">
@@ -125,12 +126,13 @@ export default function CategoriesPage() {
 
             <button
               onClick={handleLogout}
-              className="flex items-center gap-2 px-4 py-2 text-gray-600 hover:text-red-600 font-medium cursor-pointer transition-colors duration-200"
+              aria-label={t('auth.logout')}
+              className="flex items-center gap-1.5 px-2 sm:px-3 py-2 text-gray-400 hover:text-red-500 cursor-pointer transition-colors duration-200 rounded-lg hover:bg-red-50"
             >
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15m3 0 3-3m0 0-3-3m3 3H9" />
               </svg>
-              {t('auth.logout')}
+              <span className="hidden sm:inline text-sm font-medium">{t('auth.logout')}</span>
             </button>
           </div>
 
@@ -151,18 +153,27 @@ export default function CategoriesPage() {
               />
             </div>
             {/* Difficulté débloquée */}
-            <div className="flex items-center gap-2 mt-3 p-3 bg-emerald-50 border border-emerald-100 rounded-xl">
-              <span className="text-base">{'⚡'.repeat(Math.min(user.level + 1, 5))}</span>
-              <span className="text-sm text-emerald-700 font-medium">
-                Difficulté débloquée — questions jusqu&apos;à{' '}
-                <strong>
-                  {['', 'Très facile', 'Facile', 'Moyen', 'Difficile', 'Expert'][Math.min(user.level + 1, 5)]}
-                </strong>
-              </span>
-              {user.level < 4 && (
-                <span className="ml-auto text-xs text-gray-400">
-                  Niveau {user.level + 1} → {'⚡'.repeat(Math.min(user.level + 2, 5))}
+            <div className="mt-3 p-3 bg-emerald-50 border border-emerald-100 rounded-xl">
+              {/* Mobile : bloc vertical */}
+              <div className="flex items-center justify-between sm:hidden">
+                <span className="text-sm font-medium text-emerald-700">{tTraining('unlockedDifficulty')}</span>
+                <span className="text-base">{'⚡'.repeat(Math.min(user.level + 1, 5))}</span>
+              </div>
+              <p className="text-sm text-emerald-800 font-semibold mt-0.5 sm:hidden">
+                {tTraining(`difficulties.${Math.min(user.level + 1, 5)}` as `difficulties.${1|2|3|4|5}`)}
+              </p>
+              {/* Tablette+ : une seule ligne */}
+              <div className="hidden sm:flex items-center gap-2">
+                <span className="text-base">{'⚡'.repeat(Math.min(user.level + 1, 5))}</span>
+                <span className="text-sm text-emerald-700 font-medium">
+                  {tTraining('unlockedDifficulty')} —{' '}
+                  <strong>{tTraining(`difficulties.${Math.min(user.level + 1, 5)}` as `difficulties.${1|2|3|4|5}`)}</strong>
                 </span>
+              </div>
+              {user.level < 4 && (
+                <p className="text-xs text-gray-400 mt-1">
+                  {tTraining('nextLevel')} {tTraining(`difficulties.${Math.min(user.level + 2, 5)}` as `difficulties.${1|2|3|4|5}`)}
+                </p>
               )}
             </div>
           </div>
@@ -170,7 +181,7 @@ export default function CategoriesPage() {
 
         {/* Titre */}
         <div className="mb-8">
-          <h3 className="text-3xl font-bold text-gray-900 mb-2">
+          <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
             {t('categories.title')}
           </h3>
           <p className="text-gray-600">
@@ -200,16 +211,16 @@ export default function CategoriesPage() {
         )}
 
         {/* Section Examen */}
-        <div className="bg-linear-to-r from-yellow-50 to-orange-50 rounded-2xl shadow-xl p-8 border-4 border-yellow-400">
+        <div className="bg-linear-to-r from-yellow-50 to-orange-50 rounded-2xl shadow-xl p-4 sm:p-8 border-4 border-yellow-400">
           <div className="flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="flex-1">
               <div className="flex items-center gap-3 mb-3">
                 <div className="text-5xl">🏆</div>
-                <h3 className="text-3xl font-bold text-gray-900">
+                <h3 className="text-2xl sm:text-3xl font-bold text-gray-900">
                   {t('quiz.exam')}
                 </h3>
               </div>
-              <p className="text-lg text-gray-700 mb-2">
+              <p className="text-base sm:text-lg text-gray-700 mb-2">
                 {t('quiz.examDescription')}
               </p>
               <p className="text-sm text-gray-600">
@@ -221,7 +232,7 @@ export default function CategoriesPage() {
 
             <Link
               href={`/${locale}/exam`}
-              className="bg-linear-to-r from-yellow-500 to-orange-500 text-white px-12 py-5 rounded-xl font-bold text-2xl hover:from-yellow-600 hover:to-orange-600 transform hover:scale-105 transition-all duration-200 shadow-2xl flex items-center gap-3 whitespace-nowrap"
+              className="bg-linear-to-r from-yellow-500 to-orange-500 text-white px-6 py-3 sm:px-12 sm:py-5 rounded-xl font-bold text-lg sm:text-2xl hover:from-yellow-600 hover:to-orange-600 transform hover:scale-105 transition-all duration-200 shadow-2xl flex items-center gap-3 whitespace-nowrap"
             >
               <span>🎯</span>
               <span>{t('quiz.startExam')}</span>
@@ -236,6 +247,10 @@ export default function CategoriesPage() {
           </Link>
         </div>
       </main>
+
+      <footer className="mt-6 sm:mt-2 pb-6 text-center text-gray-400 text-xs sm:text-sm">
+        <p>© 2026 {t('app.name')} - {t('home.footer')}</p>
+      </footer>
     </div>
   );
 }

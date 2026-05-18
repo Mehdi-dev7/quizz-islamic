@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 
 // ============================================
 // TYPES
@@ -30,6 +31,7 @@ export default function LeaderboardPage() {
   const params = useParams();
   const router = useRouter();
   const locale = params.locale as string;
+  const t = useTranslations('leaderboard');
 
   const [scores, setScores] = useState<LeaderboardEntry[]>([]);
   const [currentUserId, setCurrentUserId] = useState<string>('');
@@ -59,7 +61,7 @@ export default function LeaderboardPage() {
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-indigo-900 flex items-center justify-center">
         <div className="text-center">
           <div className="text-6xl mb-4 animate-bounce">🏆</div>
-          <p className="text-white/70 font-medium">Chargement du classement...</p>
+          <p className="text-white/70 font-medium">{t('loading')}</p>
         </div>
       </div>
     );
@@ -70,9 +72,9 @@ export default function LeaderboardPage() {
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-indigo-900 flex items-center justify-center">
         <div className="text-center">
           <div className="text-5xl mb-4">⚠️</div>
-          <p className="text-white font-semibold mb-4">Erreur de chargement</p>
+          <p className="text-white font-semibold mb-4">{t('error')}</p>
           <Link href={`/${locale}/categories`} className="px-6 py-3 bg-white text-gray-900 rounded-xl font-semibold">
-            Retour
+            {t('back')}
           </Link>
         </div>
       </div>
@@ -80,14 +82,14 @@ export default function LeaderboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-indigo-900 p-4 py-10">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-indigo-900 px-2 py-6 sm:p-4 sm:py-10">
       <div className="max-w-2xl mx-auto">
 
         {/* Header */}
-        <div className="text-center mb-8">
-          <div className="text-6xl mb-3">🏆</div>
-          <h1 className="text-4xl font-black text-white mb-2">Classement</h1>
-          <p className="text-white/60">Meilleurs scores à l&apos;examen</p>
+        <div className="text-center mb-6 sm:mb-8">
+          <div className="text-4xl sm:text-6xl mb-2 sm:mb-3">🏆</div>
+          <h1 className="text-2xl sm:text-4xl font-black text-white mb-1 sm:mb-2">{t('title')}</h1>
+          <p className="text-white/60 text-sm">{t('subtitle')}</p>
         </div>
 
         {/* Podium top 3 */}
@@ -107,13 +109,13 @@ export default function LeaderboardPage() {
           {scores.length === 0 ? (
             <div className="text-center py-16">
               <div className="text-5xl mb-4">📭</div>
-              <p className="text-white/70 font-medium">Aucun score pour l&apos;instant</p>
-              <p className="text-white/50 text-sm mt-1">Passez votre premier examen !</p>
+              <p className="text-white/70 font-medium">{t('noScores')}</p>
+              <p className="text-white/50 text-sm mt-1">{t('noScoresHint')}</p>
               <Link
                 href={`/${locale}/exam`}
                 className="inline-block mt-6 px-6 py-3 bg-yellow-500 text-white font-bold rounded-xl hover:bg-yellow-600 transition-colors"
               >
-                🎯 Passer l&apos;examen
+                🎯 {t('takeExam')}
               </Link>
             </div>
           ) : (
@@ -121,34 +123,34 @@ export default function LeaderboardPage() {
               {scores.map((entry) => (
                 <div
                   key={entry.userId}
-                  className={`flex items-center gap-4 px-6 py-4 transition-colors ${
+                  className={`flex items-center gap-2 sm:gap-4 px-5 py-2 sm:px-6 sm:py-4 transition-colors ${
                     entry.userId === currentUserId ? 'bg-yellow-400/20' : 'hover:bg-white/5'
                   }`}
                 >
                   {/* Rang */}
-                  <div className="w-10 text-center shrink-0">
+                  <div className="w-7 sm:w-10 text-center shrink-0">
                     {entry.rank <= 3 ? (
-                      <span className="text-2xl">{MEDALS[entry.rank - 1]}</span>
+                      <span className="text-lg sm:text-2xl">{MEDALS[entry.rank - 1]}</span>
                     ) : (
-                      <span className="text-white/60 font-bold">#{entry.rank}</span>
+                      <span className="text-white/60 font-bold text-sm sm:text-base">#{entry.rank}</span>
                     )}
                   </div>
 
                   {/* Pseudo + niveau */}
                   <div className="flex-1 min-w-0">
-                    <p className={`font-bold truncate ${entry.userId === currentUserId ? 'text-yellow-300' : 'text-white'}`}>
+                    <p className={`font-bold truncate text-sm sm:text-base ${entry.userId === currentUserId ? 'text-yellow-300' : 'text-white'}`}>
                       {entry.pseudo}
                       {entry.userId === currentUserId && (
-                        <span className="ml-2 text-xs bg-yellow-500 text-black px-2 py-0.5 rounded-full font-semibold">Vous</span>
+                        <span className="ml-1.5 text-xs bg-yellow-500 text-black px-1.5 py-0.5 rounded-full font-semibold">{t('you')}</span>
                       )}
                     </p>
-                    <p className="text-white/50 text-sm">Niveau {entry.level}</p>
+                    <p className="text-white/50 text-xs sm:text-sm">{t('level', { level: entry.level })}</p>
                   </div>
 
                   {/* Score */}
                   <div className="text-right shrink-0">
-                    <p className="text-white font-bold text-lg">{entry.correctAnswers}/{entry.totalQuestions}</p>
-                    <p className="text-white/50 text-sm">{entry.percentage}%</p>
+                    <p className="text-white font-bold text-sm sm:text-lg">{entry.correctAnswers}/{entry.totalQuestions}</p>
+                    <p className="text-white/50 text-xs sm:text-sm">{entry.percentage}%</p>
                   </div>
                 </div>
               ))}
@@ -157,18 +159,18 @@ export default function LeaderboardPage() {
         </div>
 
         {/* Actions */}
-        <div className="mt-6 flex gap-3 justify-center">
+        <div className="mt-6 flex flex-col sm:flex-row gap-3 justify-center">
           <Link
             href={`/${locale}/exam`}
-            className="px-6 py-3 bg-yellow-500 text-white font-bold rounded-xl hover:bg-yellow-600 transition-colors"
+            className="w-full sm:w-auto text-center px-6 py-3 bg-yellow-500 text-white font-bold rounded-xl hover:bg-yellow-600 transition-colors"
           >
-            🎯 Passer l&apos;examen
+            🎯 {t('takeExam')}
           </Link>
           <Link
             href={`/${locale}/categories`}
-            className="px-6 py-3 bg-white/10 text-white font-bold rounded-xl hover:bg-white/20 transition-colors"
+            className="w-full sm:w-auto text-center px-6 py-3 bg-white/10 text-white font-bold rounded-xl hover:bg-white/20 transition-colors"
           >
-            ← Catégories
+            {t('backToCategories')}
           </Link>
         </div>
       </div>

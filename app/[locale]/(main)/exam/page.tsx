@@ -3,6 +3,7 @@
 import { useState, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import { QuizEngine, QuizQuestion, QuizAnswer } from '@/components/quiz/QuizEngine';
 
 interface ExamResult {
@@ -23,6 +24,7 @@ export default function ExamPage() {
   const params = useParams();
   const router = useRouter();
   const locale = params.locale as string;
+  const t = useTranslations('exam');
 
   const [phase, setPhase] = useState<Phase>('intro');
   const [questions, setQuestions] = useState<QuizQuestion[]>([]);
@@ -61,37 +63,32 @@ export default function ExamPage() {
   // ─── Intro ───
   if (phase === 'intro') {
     return (
-      <div className={`min-h-screen ${BG} flex items-center justify-center p-4`}>
+      <div className={`min-h-screen ${BG} flex items-center justify-center px-2 py-3 sm:p-4`}>
         <div className="w-full max-w-lg">
-          <div className="bg-white rounded-3xl shadow-md border border-amber-100 p-10 text-center">
-            <div className="text-7xl mb-4">🏆</div>
-            <h1 className="text-3xl font-black text-stone-800 mb-2">Examen Final</h1>
-            <p className="text-stone-400 mb-8">Testez vos connaissances sur toutes les catégories !</p>
+          <div className="bg-white rounded-3xl shadow-md border border-amber-100 p-4 sm:p-10 text-center">
+            <div className="text-5xl sm:text-7xl mb-3">🏆</div>
+            <h1 className="text-2xl sm:text-3xl font-black text-stone-800 mb-2">{t('title')}</h1>
+            <p className="text-stone-400 text-sm mb-5 sm:mb-8">{t('description')}</p>
 
             {/* Détails */}
-            <div className="bg-amber-50 border border-amber-100 rounded-2xl p-6 text-left space-y-3 mb-8">
-              {[
-                { icon: '📚', text: '10 questions par catégorie (40 au total)' },
-                { icon: '⭐', text: '5 questions bonus très difficiles' },
-                { icon: '🏅', text: 'Score enregistré au classement' },
-                { icon: '⚡', text: 'XP bonus pour les bonnes réponses' },
-              ].map(({ icon, text }) => (
-                <div key={text} className="flex items-center gap-3">
-                  <span className="text-xl">{icon}</span>
-                  <p className="text-stone-600 font-medium text-sm">{text}</p>
+            <div className="bg-amber-50 border border-amber-100 rounded-2xl p-3 sm:p-6 text-left space-y-2 sm:space-y-3 mb-5 sm:mb-8">
+              {(['detail1','detail2','detail3','detail4'] as const).map((key, i) => (
+                <div key={key} className="flex items-center gap-2 sm:gap-3">
+                  <span className="text-base sm:text-xl">{['📚','⭐','🏅','⚡'][i]}</span>
+                  <p className="text-stone-600 font-medium text-xs sm:text-sm">{t(key)}</p>
                 </div>
               ))}
             </div>
 
             <button
               onClick={startExam}
-              className="w-full bg-amber-500 text-white font-black text-xl py-4 px-8 rounded-2xl hover:bg-amber-600 transition-colors transform hover:scale-[1.02] shadow-md"
+              className="w-full bg-amber-500 text-white font-black text-base sm:text-xl py-3 sm:py-4 px-6 sm:px-8 rounded-2xl hover:bg-amber-600 transition-colors transform hover:scale-[1.02] shadow-md"
             >
-              🎯 Commencer l&apos;examen
+              🎯 {t('start')}
             </button>
 
-            <Link href={`/${locale}/categories`} className="block mt-4 text-stone-400 hover:text-stone-600 text-sm font-medium transition-colors">
-              ← Retour aux catégories
+            <Link href={`/${locale}/categories`} className="block mt-3 text-stone-400 hover:text-stone-600 text-sm font-medium transition-colors">
+              {t('backToCategories')}
             </Link>
           </div>
         </div>
@@ -106,7 +103,7 @@ export default function ExamPage() {
         <div className="text-center">
           <div className="text-6xl mb-4 animate-bounce">🏆</div>
           <p className="text-stone-500 font-medium">
-            {phase === 'submitting' ? 'Enregistrement du score...' : "Préparation de l'examen..."}
+            {phase === 'submitting' ? t('saving') : t('preparing')}
           </p>
         </div>
       </div>
@@ -119,9 +116,9 @@ export default function ExamPage() {
       <div className={`min-h-screen ${BG} flex items-center justify-center`}>
         <div className="text-center">
           <div className="text-5xl mb-4">⚠️</div>
-          <p className="text-stone-700 font-semibold mb-4">Une erreur est survenue</p>
+          <p className="text-stone-700 font-semibold mb-4">{t('error')}</p>
           <button onClick={() => setPhase('intro')} className="px-6 py-3 bg-orange-500 text-white rounded-xl font-semibold hover:bg-orange-600">
-            Retour
+            {t('back')}
           </button>
         </div>
       </div>
@@ -130,7 +127,7 @@ export default function ExamPage() {
 
   // ─── Quiz en cours ───
   if (phase === 'playing') {
-    return <QuizEngine questions={questions} mode="exam" title="Examen Final" onComplete={handleComplete} />;
+    return <QuizEngine questions={questions} mode="exam" title={t('title')} onComplete={handleComplete} />;
   }
 
   // ─── Résultats ───
@@ -139,37 +136,37 @@ export default function ExamPage() {
     const emoji = percentage >= 80 ? '🌟' : percentage >= 60 ? '🥈' : percentage >= 40 ? '🥉' : '💪';
 
     return (
-      <div className={`min-h-screen ${BG} flex items-center justify-center p-4`}>
+      <div className={`min-h-screen ${BG} flex items-center justify-center px-2 py-3 sm:p-4`}>
         <div className="w-full max-w-md">
-          <div className="bg-white rounded-3xl shadow-md border border-amber-100 p-8 text-center">
-            <div className="text-7xl mb-4">{emoji}</div>
-            <h1 className="text-2xl font-bold text-stone-800 mb-1">Examen terminé !</h1>
-            <p className="text-emerald-600 font-semibold text-sm mb-7">✓ Score enregistré au classement</p>
+          <div className="bg-white rounded-3xl shadow-md border border-amber-100 p-4 sm:p-8 text-center">
+            <div className="text-5xl sm:text-7xl mb-3">{emoji}</div>
+            <h1 className="text-xl sm:text-2xl font-bold text-stone-800 mb-1">{t('done')}</h1>
+            <p className="text-emerald-600 font-semibold text-xs sm:text-sm mb-5 sm:mb-7">✓ {t('scoreSaved')}</p>
 
             {/* Score principal */}
-            <div className="bg-orange-50 border border-orange-100 rounded-2xl p-6 mb-4">
-              <div className="text-5xl font-black text-orange-600 mb-1">
+            <div className="bg-orange-50 border border-orange-100 rounded-2xl p-4 sm:p-6 mb-3 sm:mb-4">
+              <div className="text-4xl sm:text-5xl font-black text-orange-600 mb-1">
                 {result.correctAnswers}/{result.totalQuestions}
               </div>
-              <p className="text-orange-400 font-semibold">{percentage}% de bonnes réponses</p>
+              <p className="text-orange-400 font-semibold text-sm sm:text-base">{percentage}{t('percentage')}</p>
             </div>
 
             {/* Stats */}
-            <div className="grid grid-cols-2 gap-3 mb-5">
-              <div className="bg-amber-50 border border-amber-100 rounded-xl p-4">
-                <p className="text-2xl font-bold text-amber-700">{result.bonusCorrect}/5</p>
-                <p className="text-xs text-amber-500 font-medium">Questions bonus</p>
+            <div className="grid grid-cols-2 gap-2 sm:gap-3 mb-4 sm:mb-5">
+              <div className="bg-amber-50 border border-amber-100 rounded-xl p-3 sm:p-4">
+                <p className="text-xl sm:text-2xl font-bold text-amber-700">{result.bonusCorrect}/5</p>
+                <p className="text-xs text-amber-500 font-medium">{t('bonusQuestions')}</p>
               </div>
-              <div className="bg-emerald-50 border border-emerald-100 rounded-xl p-4">
-                <p className="text-2xl font-bold text-emerald-700">+{result.xpGained}</p>
-                <p className="text-xs text-emerald-500 font-medium">XP gagnés</p>
+              <div className="bg-emerald-50 border border-emerald-100 rounded-xl p-3 sm:p-4">
+                <p className="text-xl sm:text-2xl font-bold text-emerald-700">+{result.xpGained}</p>
+                <p className="text-xs text-emerald-500 font-medium">{t('xpEarned')}</p>
               </div>
             </div>
 
             {/* Level up */}
             {result.levelUp && (
-              <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 mb-5">
-                <p className="text-amber-700 font-bold text-lg">🎉 Niveau {result.newLevel} atteint !</p>
+              <div className="bg-amber-50 border border-amber-200 rounded-2xl p-3 sm:p-4 mb-4 sm:mb-5">
+                <p className="text-amber-700 font-bold text-base sm:text-lg">🎉 {t('levelUp', { level: result.newLevel })}</p>
               </div>
             )}
 
@@ -178,13 +175,13 @@ export default function ExamPage() {
                 href={`/${locale}/leaderboard`}
                 className="block w-full bg-amber-500 text-white font-bold py-3 px-6 rounded-xl hover:bg-amber-600 transition-colors text-center"
               >
-                🏅 Voir le classement
+                🏅 {t('viewLeaderboard')}
               </Link>
               <Link
                 href={`/${locale}/categories`}
                 className="block w-full bg-stone-100 text-stone-600 font-bold py-3 px-6 rounded-xl hover:bg-stone-200 transition-colors text-center"
               >
-                ← Retour aux catégories
+                {t('backToCategories')}
               </Link>
             </div>
           </div>

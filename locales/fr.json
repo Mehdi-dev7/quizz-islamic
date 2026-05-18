@@ -71,7 +71,84 @@
       "bonusQuestions": "5 questions bonus très difficiles",
       "scoreInLeaderboard": "Votre score apparaîtra dans le classement"
     },
-    "questions": "questions"
+    "questions": "questions",
+    "engine": {
+      "quit": "Quitter",
+      "quitSession": "Quitter la session",
+      "quitConfirmExam": "Quitter l'examen ? Votre progression sera perdue et le score ne sera pas enregistré.",
+      "quitConfirmTraining": "Quitter la session ? Votre progression sera perdue.",
+      "modeExam": "Examen",
+      "modeTraining": "Entraînement",
+      "correct": "Bonne réponse !",
+      "incorrect": "Mauvaise réponse",
+      "correctAnswerLabel": "Bonne réponse :",
+      "next": "Suivant →",
+      "viewResults": "Voir les résultats"
+    }
+  },
+  "exam": {
+    "title": "Examen Final",
+    "description": "Testez vos connaissances sur toutes les catégories !",
+    "detail1": "10 questions par catégorie (40 au total)",
+    "detail2": "5 questions bonus très difficiles",
+    "detail3": "Score enregistré au classement",
+    "detail4": "XP bonus pour les bonnes réponses",
+    "start": "Commencer l'examen",
+    "backToCategories": "Retour aux catégories",
+    "preparing": "Préparation de l'examen...",
+    "saving": "Enregistrement du score...",
+    "error": "Une erreur est survenue",
+    "back": "Retour",
+    "done": "Examen terminé !",
+    "scoreSaved": "Score enregistré au classement",
+    "percentage": "% de bonnes réponses",
+    "bonusQuestions": "Questions bonus",
+    "xpEarned": "XP gagnés",
+    "levelUp": "Niveau {level} atteint !",
+    "viewLeaderboard": "Voir le classement"
+  },
+  "leaderboard": {
+    "title": "Classement",
+    "subtitle": "Meilleurs scores à l'examen",
+    "loading": "Chargement du classement...",
+    "error": "Erreur de chargement",
+    "back": "Retour",
+    "noScores": "Aucun score pour l'instant",
+    "noScoresHint": "Passez votre premier examen !",
+    "takeExam": "Passer l'examen",
+    "you": "Vous",
+    "level": "Niveau {level}",
+    "viewLeaderboard": "Voir le classement",
+    "backToCategories": "Catégories"
+  },
+  "training": {
+    "title": "Entraînement",
+    "chooseLevel": "Choisissez votre niveau de difficulté",
+    "back": "Retour",
+    "start": "Commencer →",
+    "yourLevel": "Votre niveau",
+    "noXp": "Sans XP",
+    "revisionInfo": "Mode révision — questions plus faciles que votre niveau. <strong>Aucun XP gagné.</strong>",
+    "unlockedDifficulty": "Difficulté débloquée",
+    "nextLevel": "Prochain niveau →",
+    "loadingQuestions": "Chargement des questions...",
+    "calculatingScore": "Calcul du score...",
+    "error": "Une erreur est survenue",
+    "difficulties": {
+      "1": "Très facile",
+      "2": "Facile",
+      "3": "Moyen",
+      "4": "Difficile",
+      "5": "Expert"
+    },
+    "results": {
+      "title": "Entraînement terminé !",
+      "percentage": "% de bonnes réponses",
+      "revisionNoXp": "Mode révision — aucun XP gagné",
+      "levelUp": "Niveau {level} atteint !",
+      "replay": "Rejouer",
+      "backToCategories": "Retour aux catégories"
+    }
   },
   "user": {
     "welcome": "Bienvenue, {name} !",

@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from 'react';
 import { useRouter, useParams } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { LanguageSwitcher } from '@/components/layout/LanguageSwitcher';
 
 export interface QuizQuestion {
@@ -30,6 +31,7 @@ export function QuizEngine({ questions, mode, title, onComplete }: QuizEnginePro
   const router = useRouter();
   const params = useParams();
   const locale = params.locale as string;
+  const t = useTranslations('quiz.engine');
 
   // Mélange les options une fois à l'init — empêche de mémoriser la position de la réponse
   const shuffledQuestions = useMemo(() => {
@@ -54,9 +56,7 @@ export function QuizEngine({ questions, mode, title, onComplete }: QuizEnginePro
 
   const handleQuit = () => {
     const confirmed = window.confirm(
-      mode === 'exam'
-        ? "Quitter l'examen ? Votre progression sera perdue et le score ne sera pas enregistré."
-        : "Quitter la session ? Votre progression sera perdue."
+      mode === 'exam' ? t('quitConfirmExam') : t('quitConfirmTraining')
     );
     if (confirmed) router.push(`/${locale}/categories`);
   };
@@ -106,15 +106,15 @@ export function QuizEngine({ questions, mode, title, onComplete }: QuizEnginePro
   const bg          = mode === 'exam' ? 'bg-amber-50'   : 'bg-emerald-50';
   const barColor    = mode === 'exam' ? 'bg-amber-400'  : 'bg-emerald-500';
   const btnColor    = mode === 'exam' ? 'bg-amber-500 hover:bg-amber-600' : 'bg-emerald-600 hover:bg-emerald-700';
-  const modeLabel   = mode === 'exam' ? '🏆 Examen'    : '🏋️ Entraînement';
+  const modeLabel   = mode === 'exam' ? `🏆 ${t('modeExam')}` : `🏋️ ${t('modeTraining')}`;
   const labelColor  = mode === 'exam' ? 'text-amber-700' : 'text-emerald-700';
 
   return (
-    <div className={`min-h-screen ${bg} flex items-center justify-center p-4`}>
+    <div className={`min-h-screen ${bg} flex items-center justify-center px-2 py-3 sm:p-4`}>
       <div className="w-full max-w-2xl">
 
-        {/* Barre de navigation */}
-        <div className="flex items-center justify-between mb-4">
+        {/* Barre de navigation — Quitter masqué sur mobile, visible sur sm+ */}
+        <div className="hidden sm:flex items-center justify-between mb-4">
           <button
             onClick={handleQuit}
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-stone-500 hover:text-stone-700 hover:bg-white/70 transition-all text-sm font-medium cursor-pointer"
@@ -122,22 +122,27 @@ export function QuizEngine({ questions, mode, title, onComplete }: QuizEnginePro
             <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
             </svg>
-            Quitter
+            {t('quit')}
           </button>
           <LanguageSwitcher />
         </div>
 
+        {/* Sur mobile : LanguageSwitcher seul en haut à droite */}
+        <div className="flex sm:hidden justify-end mb-3">
+          <LanguageSwitcher />
+        </div>
+
         {/* Header progression */}
-        <div className="mb-6">
+        <div className="mb-4 sm:mb-6">
           <div className="flex items-center justify-between mb-2">
-            <span className={`text-sm font-bold uppercase tracking-wide ${labelColor}`}>
+            <span className={`text-xs sm:text-sm font-bold uppercase tracking-wide ${labelColor}`}>
               {modeLabel} — {title}
             </span>
-            <span className="text-sm font-bold text-stone-400">
+            <span className="text-xs sm:text-sm font-bold text-stone-400">
               {currentIndex + 1} / {shuffledQuestions.length}
             </span>
           </div>
-          <div className="h-2 bg-stone-200 rounded-full overflow-hidden">
+          <div className="h-1.5 sm:h-2 bg-stone-200 rounded-full overflow-hidden">
             <div
               className={`h-full ${barColor} rounded-full transition-all duration-500`}
               style={{ width: `${progress}%` }}
@@ -146,36 +151,36 @@ export function QuizEngine({ questions, mode, title, onComplete }: QuizEnginePro
         </div>
 
         {/* Carte question */}
-        <div className="bg-white rounded-3xl shadow-xl shadow-stone-300 border border-stone-100 p-8 mb-4">
-          <div className="flex gap-2 mb-5">
+        <div className="bg-white rounded-3xl shadow-xl shadow-stone-300 border border-stone-100 p-3 sm:p-8 mb-3 sm:mb-4">
+          <div className="flex gap-2 mb-3 sm:mb-5">
             {current.isBonus && (
-              <span className="px-3 py-1 bg-amber-100 text-amber-700 text-xs font-bold rounded-full">
+              <span className="px-2 py-0.5 sm:px-3 sm:py-1 bg-amber-100 text-amber-700 text-xs font-bold rounded-full">
                 ⭐ BONUS
               </span>
             )}
-            <span className="px-3 py-1 bg-stone-100 text-stone-500 text-xs font-semibold rounded-full">
+            <span className="px-2 py-0.5 sm:px-3 sm:py-1 bg-stone-100 text-stone-500 text-xs font-semibold rounded-full">
               {'⚡'.repeat(current.difficulty)}
             </span>
           </div>
 
-          <h2 className="text-xl font-bold text-stone-800 mb-8 leading-relaxed">
+          <h2 className="text-base sm:text-xl font-bold text-stone-800 mb-5 sm:mb-8 leading-relaxed">
             {current.question}
           </h2>
 
-          <div className="space-y-3">
+          <div className="space-y-2 sm:space-y-3">
             {current.options.map((option, i) => (
               <button
                 key={i}
                 onClick={() => handleSelect(i + 1)}
                 disabled={showFeedback}
                 className={`
-                  w-full text-left px-5 py-4 rounded-2xl border-2 font-medium
-                  transition-all duration-200 flex items-center gap-4
+                  w-full text-left px-3 py-2.5 sm:px-5 sm:py-4 rounded-2xl border-2 font-medium
+                  transition-all duration-200 flex items-center gap-2 sm:gap-3 text-sm sm:text-base
                   ${getOptionStyle(i)}
                   ${!showFeedback ? 'cursor-pointer active:scale-[0.99]' : 'cursor-default'}
                 `}
               >
-                <span className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold shrink-0 transition-colors ${getLetterStyle(i)}`}>
+                <span className={`w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center text-xs sm:text-sm font-bold shrink-0 transition-colors ${getLetterStyle(i)}`}>
                   {['A', 'B', 'C', 'D'][i]}
                 </span>
                 <span>{option}</span>
@@ -186,31 +191,45 @@ export function QuizEngine({ questions, mode, title, onComplete }: QuizEnginePro
 
         {/* Feedback */}
         {showFeedback && (
-          <div className={`rounded-2xl p-5 border ${isCorrect ? 'bg-emerald-50 border-emerald-200' : 'bg-rose-50 border-rose-200'}`}>
-            <div className="flex items-start gap-3">
-              <span className="text-2xl">{isCorrect ? '✅' : '❌'}</span>
+          <div className={`rounded-2xl p-3 sm:p-5 border ${isCorrect ? 'bg-emerald-50 border-emerald-200' : 'bg-rose-50 border-rose-200'}`}>
+            <div className="flex items-start gap-2 sm:gap-3">
+              <span className="text-lg sm:text-2xl">{isCorrect ? '✅' : '❌'}</span>
               <div className="flex-1">
-                <p className={`font-bold text-lg ${isCorrect ? 'text-emerald-700' : 'text-rose-700'}`}>
-                  {isCorrect ? 'Bonne réponse !' : 'Mauvaise réponse'}
+                <p className={`font-bold text-sm sm:text-lg ${isCorrect ? 'text-emerald-700' : 'text-rose-700'}`}>
+                  {isCorrect ? t('correct') : t('incorrect')}
                 </p>
                 {!isCorrect && (
-                  <p className="text-sm text-stone-600 mt-1">
-                    Bonne réponse : <strong>{current.options[current.correctAnswer - 1]}</strong>
+                  <p className="text-xs sm:text-sm text-stone-600 mt-1">
+                    {t('correctAnswerLabel')} <strong>{current.options[current.correctAnswer - 1]}</strong>
                   </p>
                 )}
                 {current.explanation && (
-                  <p className="text-sm text-stone-500 mt-2 italic">💡 {current.explanation}</p>
+                  <p className="text-xs sm:text-sm text-stone-500 mt-1.5 sm:mt-2 italic">💡 {current.explanation}</p>
                 )}
               </div>
             </div>
             <button
               onClick={handleNext}
-              className={`mt-4 w-full ${btnColor} text-white font-bold py-3 px-6 rounded-xl transition-colors cursor-pointer`}
+              className={`mt-3 sm:mt-4 w-full ${btnColor} text-white font-bold py-2.5 sm:py-3 px-6 rounded-xl transition-colors cursor-pointer text-sm sm:text-base`}
             >
-              {isLast ? '🏁 Voir les résultats' : 'Suivant →'}
+              {isLast ? `🏁 ${t('viewResults')}` : t('next')}
             </button>
           </div>
         )}
+
+        {/* Bouton Quitter en bas — mobile uniquement */}
+        <div className="flex sm:hidden justify-center mt-4">
+          <button
+            onClick={handleQuit}
+            className="flex items-center gap-1.5 px-4 py-2 rounded-lg text-stone-400 hover:text-stone-600 transition-all text-xs font-medium cursor-pointer"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
+            </svg>
+            {t('quitSession')}
+          </button>
+        </div>
+
       </div>
     </div>
   );
