@@ -6,7 +6,8 @@ import { signToken, setAuthCookie } from '@/lib/jwt';
 
 export async function POST(request: NextRequest) {
   try {
-    const { pseudo, password } = await request.json();
+    const { pseudo: rawPseudo, password } = await request.json();
+    const pseudo = rawPseudo?.toLowerCase().trim();
 
     if (!pseudo || !password) {
       return NextResponse.json({ message: 'Pseudo et mot de passe requis' }, { status: 400 });
