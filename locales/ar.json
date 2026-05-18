@@ -83,7 +83,8 @@
       "incorrect": "إجابة خاطئة",
       "correctAnswerLabel": "الإجابة الصحيحة:",
       "next": "التالي ←",
-      "viewResults": "عرض النتائج"
+      "viewResults": "عرض النتائج",
+      "timeUp": "انتهى الوقت!"
     }
   },
   "exam": {

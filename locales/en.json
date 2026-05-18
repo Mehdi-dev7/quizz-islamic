@@ -83,7 +83,8 @@
       "incorrect": "Wrong answer",
       "correctAnswerLabel": "Correct answer:",
       "next": "Next →",
-      "viewResults": "View results"
+      "viewResults": "View results",
+      "timeUp": "Time's up!"
     }
   },
   "exam": {

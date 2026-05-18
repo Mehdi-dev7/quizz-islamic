@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { LanguageSwitcher } from '@/components/layout/LanguageSwitcher';
@@ -27,6 +27,40 @@ interface QuizEngineProps {
   onComplete: (answers: QuizAnswer[]) => void;
 }
 
+// Durée du timer selon le mode (en secondes)
+const TIMER_DURATION = { training: 20, exam: 20 } as const;
+
+// Cercle SVG animé qui représente le compte à rebours
+function CircleTimer({ timeLeft, total }: { timeLeft: number; total: number }) {
+  const r = 14;
+  const circ = 2 * Math.PI * r;
+  const ratio = timeLeft / total;
+  const offset = circ * (1 - ratio);
+  const color = ratio > 0.6 ? '#10b981' : ratio > 0.3 ? '#f59e0b' : '#ef4444';
+
+  return (
+    <div className="relative w-9 h-9 shrink-0">
+      <svg className="w-full h-full -rotate-90" viewBox="0 0 36 36">
+        <circle cx="18" cy="18" r={r} fill="none" stroke="#e5e7eb" strokeWidth="2.5" />
+        <circle
+          cx="18" cy="18" r={r} fill="none"
+          stroke={color} strokeWidth="2.5"
+          strokeDasharray={circ}
+          strokeDashoffset={offset}
+          strokeLinecap="round"
+          style={{ transition: 'stroke-dashoffset 0.9s linear, stroke 0.4s' }}
+        />
+      </svg>
+      <span
+        className="absolute inset-0 flex items-center justify-center text-xs font-bold"
+        style={{ color }}
+      >
+        {timeLeft}
+      </span>
+    </div>
+  );
+}
+
 export function QuizEngine({ questions, mode, title, onComplete }: QuizEngineProps) {
   const router = useRouter();
   const params = useParams();
@@ -34,7 +68,9 @@ export function QuizEngine({ questions, mode, title, onComplete }: QuizEnginePro
   const t = useTranslations('quiz.engine');
 
   // Mélange les options une fois à l'init — empêche de mémoriser la position de la réponse
-  const shuffledQuestions = useMemo(() => {
+  // _originalIndexMap[i] = index original (1-4) de l'option affichée à la position i (0-indexé)
+  // Nécessaire pour soumettre l'index ORIGINAL au backend (qui compare avec q.correctAnswer DB)
+  const shuffledQuestions = useMemo<(QuizQuestion & { _originalIndexMap: number[] })[]>(() => {
     return questions.map(q => {
       const pairs = q.options.map((opt, i) => ({ opt, originalIndex: i + 1 }));
       for (let i = pairs.length - 1; i > 0; i--) {
@@ -45,6 +81,7 @@ export function QuizEngine({ questions, mode, title, onComplete }: QuizEnginePro
         ...q,
         options: pairs.map(p => p.opt),
         correctAnswer: pairs.findIndex(p => p.originalIndex === q.correctAnswer) + 1,
+        _originalIndexMap: pairs.map(p => p.originalIndex),
       };
     });
   }, [questions]);
@@ -53,6 +90,22 @@ export function QuizEngine({ questions, mode, title, onComplete }: QuizEnginePro
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const [showFeedback, setShowFeedback] = useState(false);
   const [answers, setAnswers] = useState<QuizAnswer[]>([]);
+
+  const duration = TIMER_DURATION[mode];
+  const [timeLeft, setTimeLeft] = useState<number>(duration);
+
+  // Compte à rebours — s'arrête dès que le feedback est affiché
+  useEffect(() => {
+    if (showFeedback) return;
+    if (timeLeft <= 0) {
+      // -1 = timeout (aucune option sélectionnée) — converti en 0 lors du submit
+      setSelectedAnswer(-1);
+      setShowFeedback(true);
+      return;
+    }
+    const id = setTimeout(() => setTimeLeft((s) => s - 1), 1000);
+    return () => clearTimeout(id);
+  }, [timeLeft, showFeedback]);
 
   const handleQuit = () => {
     const confirmed = window.confirm(
@@ -72,15 +125,23 @@ export function QuizEngine({ questions, mode, title, onComplete }: QuizEnginePro
   };
 
   const handleNext = () => {
-    const newAnswers = [...answers, { questionId: current._id, selectedAnswer: selectedAnswer! }];
+    // Convertit l'index mélangé (1-4) en index original DB (1-4)
+    // Si timeout (-1) ou pas de réponse → 0 (jamais égal à correctAnswer 1-4 → toujours faux)
+    const originalSelected = selectedAnswer !== null && selectedAnswer > 0
+      ? current._originalIndexMap[selectedAnswer - 1]
+      : 0;
+    const newAnswers = [...answers, { questionId: current._id, selectedAnswer: originalSelected }];
     setAnswers(newAnswers);
     if (isLast) { onComplete(newAnswers); return; }
+    // Reset le timer ici — évite que l'effet countdown relance avec timeLeft=0
+    setTimeLeft(duration);
     setCurrentIndex((i) => i + 1);
     setSelectedAnswer(null);
     setShowFeedback(false);
   };
 
-  const isCorrect = selectedAnswer === current.correctAnswer;
+  const isTimeout = selectedAnswer === -1;
+  const isCorrect = !isTimeout && selectedAnswer === current.correctAnswer;
 
   const getOptionStyle = (i: number) => {
     const opt = i + 1;
@@ -90,7 +151,8 @@ export function QuizEngine({ questions, mode, title, onComplete }: QuizEnginePro
         : 'bg-white border-stone-300 hover:border-stone-400 hover:bg-stone-50';
     }
     if (opt === current.correctAnswer) return 'bg-emerald-50 border-emerald-400 text-emerald-900';
-    if (opt === selectedAnswer)         return 'bg-rose-50 border-rose-400 text-rose-900';
+    // selectedAnswer === -1 = timeout : aucune option marquée en rouge
+    if (opt === selectedAnswer && !isTimeout) return 'bg-rose-50 border-rose-400 text-rose-900';
     return 'bg-white border-stone-200 text-stone-300';
   };
 
@@ -98,7 +160,7 @@ export function QuizEngine({ questions, mode, title, onComplete }: QuizEnginePro
     const opt = i + 1;
     if (!showFeedback) return selectedAnswer === opt ? 'bg-amber-400 text-white' : 'bg-stone-100 text-stone-500';
     if (opt === current.correctAnswer) return 'bg-emerald-500 text-white';
-    if (opt === selectedAnswer)        return 'bg-rose-500 text-white';
+    if (opt === selectedAnswer && !isTimeout) return 'bg-rose-500 text-white';
     return 'bg-stone-100 text-stone-300';
   };
 
@@ -138,9 +200,13 @@ export function QuizEngine({ questions, mode, title, onComplete }: QuizEnginePro
             <span className={`text-xs sm:text-sm font-bold uppercase tracking-wide ${labelColor}`}>
               {modeLabel} — {title}
             </span>
-            <span className="text-xs sm:text-sm font-bold text-stone-400">
-              {currentIndex + 1} / {shuffledQuestions.length}
-            </span>
+            <div className="flex items-center gap-2">
+              <span className="text-xs sm:text-sm font-bold text-stone-400">
+                {currentIndex + 1} / {shuffledQuestions.length}
+              </span>
+              {/* Timer circulaire — masqué pendant le feedback */}
+              {!showFeedback && <CircleTimer timeLeft={timeLeft} total={duration} />}
+            </div>
           </div>
           <div className="h-1.5 sm:h-2 bg-stone-200 rounded-full overflow-hidden">
             <div
@@ -191,13 +257,22 @@ export function QuizEngine({ questions, mode, title, onComplete }: QuizEnginePro
 
         {/* Feedback */}
         {showFeedback && (
-          <div className={`rounded-2xl p-3 sm:p-5 border ${isCorrect ? 'bg-emerald-50 border-emerald-200' : 'bg-rose-50 border-rose-200'}`}>
+          <div className={`rounded-2xl p-3 sm:p-5 border ${
+            isCorrect   ? 'bg-emerald-50 border-emerald-200' :
+            isTimeout   ? 'bg-amber-50 border-amber-200'     :
+                          'bg-rose-50 border-rose-200'
+          }`}>
             <div className="flex items-start gap-2 sm:gap-3">
-              <span className="text-lg sm:text-2xl">{isCorrect ? '✅' : '❌'}</span>
+              <span className="text-lg sm:text-2xl">
+                {isCorrect ? '✅' : isTimeout ? '⏰' : '❌'}
+              </span>
               <div className="flex-1">
-                <p className={`font-bold text-sm sm:text-lg ${isCorrect ? 'text-emerald-700' : 'text-rose-700'}`}>
-                  {isCorrect ? t('correct') : t('incorrect')}
+                <p className={`font-bold text-sm sm:text-lg ${
+                  isCorrect ? 'text-emerald-700' : isTimeout ? 'text-amber-700' : 'text-rose-700'
+                }`}>
+                  {isCorrect ? t('correct') : isTimeout ? t('timeUp') : t('incorrect')}
                 </p>
+                {/* Montre la bonne réponse si incorrect ou timeout */}
                 {!isCorrect && (
                   <p className="text-xs sm:text-sm text-stone-600 mt-1">
                     {t('correctAnswerLabel')} <strong>{current.options[current.correctAnswer - 1]}</strong>
