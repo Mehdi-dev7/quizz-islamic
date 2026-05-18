@@ -20,12 +20,12 @@ export async function GET(req: NextRequest) {
     // 10 questions par catégorie (toutes difficultés)
     const categoryQuestionsPromises = categories.map(async (cat) => {
       const all = await Question.find({ categoryId: cat._id, isBonus: false }).lean();
-      return all.sort(() => Math.random() - 0.5).slice(0, 10);
+      return fisherYates(all).slice(0, 10);
     });
 
     // 5 questions bonus (parmi toutes les catégories)
     const bonusPromise = Question.find({ isBonus: true }).lean().then((all) =>
-      all.sort(() => Math.random() - 0.5).slice(0, 5)
+      fisherYates(all).slice(0, 5)
     );
 
     const [categoryResults, bonusQuestions] = await Promise.all([
@@ -59,4 +59,13 @@ export async function GET(req: NextRequest) {
 
 function cap(s: string) {
   return s.charAt(0).toUpperCase() + s.slice(1);
+}
+
+function fisherYates<T>(arr: T[]): T[] {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
 }

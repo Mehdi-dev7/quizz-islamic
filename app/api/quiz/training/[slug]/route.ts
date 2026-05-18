@@ -44,8 +44,8 @@ export async function GET(
       isBonus: false,
     }).lean();
 
-    // Mélanger et prendre 10
-    const shuffled = allQuestions.sort(() => Math.random() - 0.5).slice(0, 10);
+    // Mélanger et prendre 10 (Fisher-Yates — distribution uniforme)
+    const shuffled = fisherYates(allQuestions).slice(0, 10);
 
     // Formater pour le client (langue + structure simplifiée)
     const questions = shuffled.map((q) => ({
@@ -80,7 +80,16 @@ export async function GET(
   }
 }
 
-// Capitalise la première lettre (fr → Fr, en → En, ar → Ar)
 function cap(s: string) {
   return s.charAt(0).toUpperCase() + s.slice(1);
+}
+
+// Mélange aléatoire non biaisé (Fisher-Yates)
+function fisherYates<T>(arr: T[]): T[] {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
 }
