@@ -52,6 +52,7 @@ export default function ExamPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ answers, mode: 'exam' }),
       });
+      if (!res.ok) { setPhase('error'); return; }
       const data = await res.json();
       setResult(data);
       setPhase('results');

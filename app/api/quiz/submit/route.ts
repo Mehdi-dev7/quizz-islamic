@@ -32,6 +32,11 @@ export async function POST(req: NextRequest) {
     const questions = await Question.find({ _id: { $in: ids } }).lean();
     const questionMap = new Map(questions.map((q) => [q._id.toString(), q]));
 
+    // Si aucune question trouvée, les IDs sont périmés (ex: reseed entre le chargement et la soumission)
+    if (questionMap.size === 0) {
+      return NextResponse.json({ message: 'Session expirée, veuillez relancer l\'examen.' }, { status: 409 });
+    }
+
     // Calculer les bonnes réponses et les XP
     let correctAnswers = 0;
     let bonusCorrect = 0;
